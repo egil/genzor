@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+	  <TargetFramework>net6.0</TargetFramework>
+		<RootNamespace>Genzor</RootNamespace>
+		<AssemblyName>Genzor</AssemblyName>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageId>genzor</PackageId>
+		<Title>genzor</Title>
+		<Description>
+			Genzor is a library ideally suited for generating code spanning multiple files and folders, using Blazor component model to represent the generated output.
+		</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+		<PackageReference Include="Nerdbank.GitVersioning" Version="3.3.37" PrivateAssets="All" />
+	  </ItemGroup>
+	  	
+</Project>

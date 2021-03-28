@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!--
+    Add any shared properties you want for the projects under this directory that need to be set before the auto imported Directory.Build.props
+  -->
+	<Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\Directory.Build.props" />
+
+	<PropertyGroup Label="Compile settings">
+		<Nullable>annotations</Nullable>
+		<IsPackable>false</IsPackable>
+		<SonarQubeTestProject>true</SonarQubeTestProject>
+	</PropertyGroup>
+
+	<ItemGroup Condition="$(MSBuildProjectName) != 'bunit.testassets'">
+		<PackageReference Include="AngleSharp" Version="0.14.0" />
+		<PackageReference Include="AngleSharp.Css" Version="0.14.2" />
+		<PackageReference Include="AngleSharp.Diffing" Version="0.14.0" />
+		<PackageReference Include="AutoFixture" Version="4.15.0" />
+		<PackageReference Include="AutoFixture.Xunit2" Version="4.15.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+		<PackageReference Include="Shouldly" Version="4.0.3" />
+		<PackageReference Include="xunit" Version="2.4.1" />
+		<PackageReference Include="AutoFixture.Xunit2" Version="4.15.0" />
+		<PackageReference Include="Xunit.Combinatorial" Version="1.4.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" PrivateAssets="All" />
+		<PackageReference Include="coverlet.msbuild" Version="3.0.2" PrivateAssets="All" />
+	</ItemGroup>
+
+</Project>
