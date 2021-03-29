@@ -17,6 +17,7 @@ namespace Genzor
 	public class Generator : Renderer
 	{
 		private readonly IFileSystem fileSystem;
+		private readonly ILogger<Generator> logger;
 
 		public override Dispatcher Dispatcher { get; } = Dispatcher.CreateDefault();
 
@@ -24,22 +25,26 @@ namespace Genzor
 			: base(services, loggerFactory)
 		{
 			this.fileSystem = services.GetRequiredService<IFileSystem>();
+			this.logger = loggerFactory.CreateLogger<Generator>();
 		}
 
-		public async Task InvokeGeneratorAsync(Type componentType, ParameterView initialParameters)
+		public Task InvokeGeneratorAsync(Type componentType, ParameterView initialParameters)
 		{
-			var (component, frames) = await CreateInitialRenderAsync(componentType, initialParameters);
-
-			var context = new HtmlRenderingContext();
-			var newPosition = RenderFrames(context, frames, 0, frames.Count);
-
-			Debug.Assert(newPosition == frames.Count);
-
-			// Assert no async exceptions
-			if (component is IFileComponent fileComponent)
+			return Dispatcher.InvokeAsync(async () =>
 			{
-				fileSystem.AddItem(new File(fileComponent.FileName));
-			}
+				var (component, frames) = await CreateInitialRenderAsync(componentType, initialParameters);
+
+				var context = new HtmlRenderingContext();
+				var newPosition = RenderFrames(context, frames, 0, frames.Count);
+
+				Debug.Assert(newPosition == frames.Count);
+
+				// Assert no async exceptions
+				if (component is IFileComponent fileComponent)
+				{
+					fileSystem.AddItem(new File(fileComponent.FileName));
+				}
+			});
 		}
 
 		public Task InvokeGeneratorAsync<TComponent>(ParameterView? initialParameters = null)
