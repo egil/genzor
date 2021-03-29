@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<RootNamespace>Genzor</RootNamespace>
 		<AssemblyName>Genzor</AssemblyName>
 	</PropertyGroup>
@@ -13,5 +13,9 @@
 			Genzor is a library ideally suited for generating code spanning multiple files and folders, using Blazor component model to represent the generated output.
 		</Description>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0-preview.2.21154.6" />
+	</ItemGroup>
 
 </Project>

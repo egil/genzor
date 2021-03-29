@@ -1,15 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <IsPackable>false</IsPackable>
-		<TargetFramework>net5.0</TargetFramework>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<IsPackable>false</IsPackable>
 		<RootNamespace>Genzor</RootNamespace>
 		<AssemblyName>Genzor.Tests</AssemblyName>
 	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\genzor\genzor.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0-preview.2.21154.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0-preview.2.21154.6" />
+		<PackageReference Include="MartinCostello.Logging.XUnit" Version="0.1.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\genzor\genzor.csproj" />
+	</ItemGroup>
 
 </Project>

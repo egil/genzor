@@ -31,7 +31,7 @@
 	</PropertyGroup>
 
 	<!-- Treat warnings as errors are always on when building in release -->
-	<PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	</PropertyGroup>
 
