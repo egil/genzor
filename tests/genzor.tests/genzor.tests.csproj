@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+		<TargetFramework>net5.0</TargetFramework>
+		<RootNamespace>Genzor</RootNamespace>
+		<AssemblyName>Genzor.Tests</AssemblyName>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\genzor\genzor.csproj" />
+  </ItemGroup>
+
+</Project>
