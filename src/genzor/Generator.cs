@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Genzor.Components;
 using Genzor.FileSystem;
@@ -54,9 +55,7 @@ namespace Genzor
 		}
 
 		protected override void HandleException(Exception exception)
-		{
-			// TODO: do something with exceptions
-		}
+			=> ExceptionDispatchInfo.Capture(exception).Throw();
 
 		protected override Task UpdateDisplayAsync(in RenderBatch renderBatch)
 		{

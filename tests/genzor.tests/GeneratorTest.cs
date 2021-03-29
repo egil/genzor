@@ -25,13 +25,15 @@ namespace Genzor
 			Services = services.BuildServiceProvider();
 		}
 
+		private Generator CreateSut() => Services.GetRequiredService<Generator>();
+
 		[Fact(DisplayName = "when invoking generator with HelloWorldGenerator, " +
 							"then a HelloWorld.txt file is added to file system")]
 		public async Task Test001()
 		{
 			var fileSystem = Services.GetRequiredService<IFileSystem>();
 
-			var sut = Services.GetRequiredService<Generator>();
+			var sut = CreateSut();
 
 			await sut.InvokeGeneratorAsync<HelloWorldGenerator>();
 
@@ -45,6 +47,19 @@ namespace Genzor
 				.Name
 				.Should()
 				.Be("HelloWorld.txt");
+		}
+
+		[Fact(DisplayName = "when invoking generator that throws exception, " +
+							"then the exception is re-thrown to caller")]
+		public void Test002()
+		{
+			var sut = CreateSut();
+
+			Func<Task> throwingAction = () => sut.InvokeGeneratorAsync<ThrowingGenereator>();
+
+			throwingAction
+				.Should()
+				.Throw<ThrowingGenereator.ThrowingGenereatorException>();
 		}
 
 		// passing parameters to generators
