@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using FluentAssertions;
 using Genzor.FileSystem;
 using Genzor.TestGenerators;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Xunit;
@@ -31,34 +34,44 @@ namespace Genzor
 
 		[Fact(DisplayName = "given generator that creates a file, " +
 							"when invoking generator, " +
-							"then a file with expected name is added to file system")]
+							"then a generated file is added to file system")]
 		public async Task Test001()
 		{
-			await SUT.InvokeGeneratorAsync<StaticFileWithContent>();
+			await SUT.InvokeGeneratorAsync<StaticFileGenerator>();
 
 			FileSystem
 				.Should()
 				.ContainSingleFile()
 				.Subject
-				.Name
 				.Should()
-				.Be(new StaticFileWithContent().Name);
+				.BeEquivalentTo(new
+				{
+					Name = new StaticFileGenerator().Name,
+					Content = new StaticFileGenerator().Content,
+				});
 		}
 
-		[Fact(DisplayName = "given generator that creates file with content, " +
-							"when invoking generator, " +
-							"then a file with expected content is added to file system")]
-		public async Task Test002()
+		[AutoData]
+		[Theory(DisplayName = "given generator that takes parameters, " +
+							  "when invoking generator with parameters, " +
+							  "then parameters are passed to generator")]
+		public async Task Test011(string filename, string content)
 		{
-			await SUT.InvokeGeneratorAsync<StaticFileWithContent>();
+			await SUT.InvokeGeneratorAsync<GenericFileGenerator>(
+				CreateParametersView(
+					("Name", filename),
+					("ChildContent", content)));
 
 			FileSystem
 				.Should()
 				.ContainSingleFile()
 				.Subject
-				.Content
 				.Should()
-				.Be(new StaticFileWithContent().Content);
+				.BeEquivalentTo(new
+				{
+					Name = filename,
+					Content = content,
+				});
 		}
 
 		[Fact(DisplayName = "when invoking generator that throws exception, " +
@@ -72,6 +85,24 @@ namespace Genzor
 				.Throw<ThrowingGenereator.ThrowingGenereatorException>();
 		}
 
-		// passing parameters to generators
+		private static ParameterView CreateParametersView(params (string name, object value)[] parameters)
+		{
+			var dict = new Dictionary<string, object>(StringComparer.Ordinal);
+
+			foreach (var pkv in parameters)
+			{
+				if (pkv.name == "ChildContent" && pkv.value is string text)
+				{
+					RenderFragment value = b => b.AddContent(0, text);
+					dict.Add(pkv.name, value);
+				}
+				else
+				{
+					dict.Add(pkv.name, pkv.value);
+				}
+			}
+
+			return ParameterView.FromDictionary(dict);
+		}
 	}
 }

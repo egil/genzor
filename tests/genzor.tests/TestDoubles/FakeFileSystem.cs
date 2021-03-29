@@ -9,9 +9,9 @@ namespace Genzor
 
 		public IReadOnlyList<IFileSystemItem> Root => items;
 
-		public void AddItem(IFileSystemItem file)
+		public void AddItem(IFileSystemItem item)
 		{
-			items.Add(file);
+			items.Add(item);
 		}
 	}
 }

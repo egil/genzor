@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Genzor.TestGenerators
 {
-	public class GenericFile : ComponentBase, IFileComponent
+	public class GenericFileGenerator : ComponentBase, IFileComponent
 	{
 		[Parameter] public string Name { get; set; } = string.Empty;
 
