@@ -6,7 +6,7 @@ namespace Genzor.TestGenerators
 {
 	public class ThrowingGenereator : ComponentBase, IFileComponent
 	{
-		public string FileName { get; } = string.Empty;
+		public string Name { get; } = string.Empty;
 
 		protected override void OnInitialized() => throw new ThrowingGenereatorException();
 

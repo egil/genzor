@@ -14,6 +14,10 @@ namespace Genzor
 	{
 		private IServiceProvider Services { get; }
 
+		private Generator SUT => Services.GetRequiredService<Generator>();
+
+		private IFileSystem FileSystem => Services.GetRequiredService<IFileSystem>();
+
 		public GeneratorTest(ITestOutputHelper outputHelper)
 		{
 			var services = new ServiceCollection();
@@ -25,37 +29,43 @@ namespace Genzor
 			Services = services.BuildServiceProvider();
 		}
 
-		private Generator CreateSut() => Services.GetRequiredService<Generator>();
-
-		[Fact(DisplayName = "when invoking generator with HelloWorldGenerator, " +
-							"then a HelloWorld.txt file is added to file system")]
+		[Fact(DisplayName = "given generator that creates a file, " +
+							"when invoking generator, " +
+							"then a file with expected name is added to file system")]
 		public async Task Test001()
 		{
-			var fileSystem = Services.GetRequiredService<IFileSystem>();
+			await SUT.InvokeGeneratorAsync<StaticFileWithContent>();
 
-			var sut = CreateSut();
-
-			await sut.InvokeGeneratorAsync<HelloWorldGenerator>();
-
-			fileSystem.Root
+			FileSystem
 				.Should()
-				.ContainSingle()
-				.Subject
-				.Should()
-				.BeAssignableTo<IFile>()
+				.ContainSingleFile()
 				.Subject
 				.Name
 				.Should()
-				.Be("HelloWorld.txt");
+				.Be(new StaticFileWithContent().Name);
+		}
+
+		[Fact(DisplayName = "given generator that creates file with content, " +
+							"when invoking generator, " +
+							"then a file with expected content is added to file system")]
+		public async Task Test002()
+		{
+			await SUT.InvokeGeneratorAsync<StaticFileWithContent>();
+
+			FileSystem
+				.Should()
+				.ContainSingleFile()
+				.Subject
+				.Content
+				.Should()
+				.Be(new StaticFileWithContent().Content);
 		}
 
 		[Fact(DisplayName = "when invoking generator that throws exception, " +
 							"then the exception is re-thrown to caller")]
-		public void Test002()
+		public void Test102()
 		{
-			var sut = CreateSut();
-
-			Func<Task> throwingAction = () => sut.InvokeGeneratorAsync<ThrowingGenereator>();
+			Func<Task> throwingAction = () => SUT.InvokeGeneratorAsync<ThrowingGenereator>();
 
 			throwingAction
 				.Should()

@@ -29,6 +29,12 @@ namespace Genzor
 			this.logger = loggerFactory.CreateLogger<Generator>();
 		}
 
+		public Task InvokeGeneratorAsync<TComponent>(ParameterView? initialParameters = null)
+			where TComponent : IComponent
+		{
+			return InvokeGeneratorAsync(typeof(TComponent), initialParameters ?? ParameterView.Empty);
+		}
+
 		public Task InvokeGeneratorAsync(Type componentType, ParameterView initialParameters)
 		{
 			return Dispatcher.InvokeAsync(async () =>
@@ -43,25 +49,14 @@ namespace Genzor
 				// Assert no async exceptions
 				if (component is IFileComponent fileComponent)
 				{
-					fileSystem.AddItem(new File(fileComponent.FileName));
+					fileSystem.AddItem(new File(fileComponent.Name, string.Join(null, context.Result)));
 				}
 			});
 		}
 
-		public Task InvokeGeneratorAsync<TComponent>(ParameterView? initialParameters = null)
-			where TComponent : IComponent
-		{
-			return InvokeGeneratorAsync(typeof(TComponent), initialParameters ?? ParameterView.Empty);
-		}
+		protected override void HandleException(Exception exception) => ExceptionDispatchInfo.Capture(exception).Throw();
 
-		protected override void HandleException(Exception exception)
-			=> ExceptionDispatchInfo.Capture(exception).Throw();
-
-		protected override Task UpdateDisplayAsync(in RenderBatch renderBatch)
-		{
-			// return canceled task instead. see HtmlRenderer.cs for inspration
-			return Task.CompletedTask;
-		}
+		protected override Task UpdateDisplayAsync(in RenderBatch renderBatch) => Task.CompletedTask;
 
 		private async Task<(IFileComponent, ArrayRange<RenderTreeFrame>)> CreateInitialRenderAsync(Type componentType, ParameterView initialParameters)
 		{
