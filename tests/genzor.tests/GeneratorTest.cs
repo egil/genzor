@@ -16,9 +16,8 @@ namespace Genzor
 
 		public GeneratorTest(ITestOutputHelper outputHelper)
 		{
-			var services = new ServiceCollection()
-				.AddLogging((builder) => builder.AddXUnit(outputHelper));
-
+			var services = new ServiceCollection();
+			services.AddLogging((builder) => builder.AddXUnit(outputHelper).SetMinimumLevel(LogLevel.Debug));
 			services.AddSingleton<FakeFileSystem>();
 			services.AddSingleton<IFileSystem>(s => s.GetRequiredService<FakeFileSystem>());
 			services.AddSingleton<Generator>();
