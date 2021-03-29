@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Genzor.FileSystem;
@@ -13,8 +10,8 @@ using Xunit.Abstractions;
 
 namespace Genzor
 {
-    public class GeneratorTest
-    {
+	public class GeneratorTest
+	{
 		private IServiceProvider Services { get; }
 
 		public GeneratorTest(ITestOutputHelper outputHelper)
@@ -52,5 +49,5 @@ namespace Genzor
 		}
 
 		// passing parameters to generators
-    }
+	}
 }
