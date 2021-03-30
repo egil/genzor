@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
@@ -34,6 +36,17 @@ namespace FluentAssertions
 				.Subject;
 
 			return new AndWhichConstraint<FileSystemAssertions, IFile>(this, file);
+		}
+
+		public AndWhichConstraint<FileSystemAssertions, IEnumerable<IFile>> HaveFiles(int count, string because = "", params object[] becauseArgs)
+		{
+			using var scope = new AssertionScope(Identifier);
+
+			AndConstraint<Collections.GenericCollectionAssertions<IFile>> files = Subject.Root.OfType<IFile>()
+				.Should()
+				.HaveCount(count, because, becauseArgs);
+
+			return new AndWhichConstraint<FileSystemAssertions, IEnumerable<IFile>>(this, files.And.Subject);
 		}
 	}
 }

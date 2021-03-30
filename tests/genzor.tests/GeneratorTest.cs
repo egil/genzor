@@ -74,6 +74,25 @@ namespace Genzor
 				});
 		}
 
+		[Fact(DisplayName = "given generator that creates multiple file, " +
+							"when invoking generator, " +
+							"then generated files is added to file system in generated order")]
+		public async Task Test021()
+		{
+			await SUT.InvokeGeneratorAsync<TwoFileGenerator>();
+
+			FileSystem
+				.Should()
+				.HaveFiles(2)
+				.Which
+				.Should()
+				.BeEquivalentTo(new[]
+				{
+					new { Name = TwoFileGenerator.FirstFilesName },
+					new { Name = TwoFileGenerator.SecondFilesName },
+				});
+		}
+
 		[Fact(DisplayName = "when invoking generator that throws exception, " +
 							"then the exception is re-thrown to caller")]
 		public void Test102()

@@ -18,15 +18,13 @@ namespace Genzor
 	public class Generator : Renderer
 	{
 		private readonly IFileSystem fileSystem;
-		private readonly ILogger<Generator> logger;
 
 		public override Dispatcher Dispatcher { get; } = Dispatcher.CreateDefault();
 
 		public Generator(IServiceProvider services, ILoggerFactory loggerFactory)
 			: base(services, loggerFactory)
 		{
-			this.fileSystem = services.GetRequiredService<IFileSystem>();
-			this.logger = loggerFactory.CreateLogger<Generator>();
+			fileSystem = services.GetRequiredService<IFileSystem>();
 		}
 
 		public Task InvokeGeneratorAsync<TComponent>(ParameterView? initialParameters = null)
@@ -35,37 +33,54 @@ namespace Genzor
 			return InvokeGeneratorAsync(typeof(TComponent), initialParameters ?? ParameterView.Empty);
 		}
 
-		public Task InvokeGeneratorAsync(Type componentType, ParameterView initialParameters)
+		public async Task InvokeGeneratorAsync(Type componentType, ParameterView initialParameters)
 		{
-			return Dispatcher.InvokeAsync(async () =>
+			var (id, component) = await Dispatcher.InvokeAsync(() => CreateInitialRenderAsync(componentType, initialParameters));
+
+			AddItemsToFileSystem(id, component);
+		}
+
+		private void AddItemsToFileSystem(int componentId, IComponent component)
+		{
+			if (component is IFileComponent fileComponent)
 			{
-				var (component, frames) = await CreateInitialRenderAsync(componentType, initialParameters);
+				AddFileToFileSystem(componentId, fileComponent);
+			}
 
-				var context = new HtmlRenderingContext();
-				var newPosition = RenderFrames(context, frames, 0, frames.Count);
+			var frames = GetCurrentRenderTreeFrames(componentId);
 
-				Debug.Assert(newPosition == frames.Count);
+			for (var i = 0; i < frames.Count; i++)
+			{
+				ref var frame = ref frames.Array[i];
 
-				// Assert no async exceptions
-				if (component is IFileComponent fileComponent)
+				if (frame.FrameType == RenderTreeFrameType.Component
+					&& frame.Component is IFileComponent fc)
 				{
-					fileSystem.AddItem(new File(fileComponent.Name, string.Join(null, context.Result)));
+					AddFileToFileSystem(frame.ComponentId, fc);
 				}
-			});
+			}
+		}
+
+		private void AddFileToFileSystem(int componentId, IFileComponent component)
+		{
+			var frames = GetCurrentRenderTreeFrames(componentId);
+			var context = new HtmlRenderingContext();
+			var newPosition = RenderFrames(context, frames, 0, frames.Count);
+			Debug.Assert(newPosition == frames.Count, "All render frames for component was not processes.");
+			var file = new File(component.Name, string.Join(null, context.Result));
+			fileSystem.AddItem(file);
 		}
 
 		protected override void HandleException(Exception exception) => ExceptionDispatchInfo.Capture(exception).Throw();
 
 		protected override Task UpdateDisplayAsync(in RenderBatch renderBatch) => Task.CompletedTask;
 
-		private async Task<(IFileComponent, ArrayRange<RenderTreeFrame>)> CreateInitialRenderAsync(Type componentType, ParameterView initialParameters)
+		private async Task<(int ComponentId, IComponent Component)> CreateInitialRenderAsync(Type componentType, ParameterView initialParameters)
 		{
 			var component = InstantiateComponent(componentType);
 			var componentId = AssignRootComponentId(component);
-
 			await RenderRootComponentAsync(componentId, initialParameters);
-
-			return ((IFileComponent)component, GetCurrentRenderTreeFrames(componentId));
+			return (componentId, component);
 		}
 
 		private int RenderFrames(HtmlRenderingContext context, ArrayRange<RenderTreeFrame> frames, int position, int maxElements)
