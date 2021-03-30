@@ -10,7 +10,7 @@
 		<PackageId>genzor</PackageId>
 		<Title>genzor</Title>
 		<Description>
-			Genzor is a library ideally suited for generating code spanning multiple files and folders, using Blazor component model to represent the generated output.
+			Genzor is a library ideally suited for generating many files spanning many folders, using Blazor component model to represent the generated output.
 		</Description>
 	</PropertyGroup>
 

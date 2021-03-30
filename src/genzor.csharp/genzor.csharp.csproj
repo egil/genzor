@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<RootNamespace>Genzor.CSharp</RootNamespace>
+		<AssemblyName>Genzor.CSharp</AssemblyName>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageId>genzor.csharp</PackageId>
+		<Title>genzor.csharp</Title>
+		<Description>
+			Genzor C# is a library ideally suited for generating C# code spanning multiple files and folders, using Blazor component model to represent the generated output.
+		</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\genzor\genzor.csproj" />
+	</ItemGroup>
+
+</Project>
