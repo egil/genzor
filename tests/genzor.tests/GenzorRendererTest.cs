@@ -85,6 +85,41 @@ namespace Genzor
 				.WithMessage($"A directory component ({nameof(IDirectoryComponent)}) cannot be the child of a file component ({nameof(IFileComponent)}). Name of misplaced directory: {FileWithDirectoryGenerator.DirectoryName}");
 		}
 
+		[Fact(DisplayName = "given file generator with child components as its content, " +
+							"when invoking generator, " +
+							"then content from child components are part of generated files content")]
+		public async Task Test013()
+		{
+			await SUT.InvokeGeneratorAsync<StaticFileWithChildComponentGenerator>();
+
+			FileSystem
+				.Should()
+				.ContainSingleTextFile()
+				.Which
+				.Content
+				.Should()
+				.Be(StaticFileWithChildComponentGenerator.ChildComponentText);
+		}
+
+		[Fact(DisplayName = "given file generator with multiple nested child components as its content, " +
+							"when invoking generator, " +
+							"then content from all child components are part of generated files content")]
+		public async Task Test014()
+		{
+			var expectedContent = $"{StaticFileWithMultipleNestedChildComponentsGenerator.Child1ComponentText}" +
+								  $"{StaticFileWithMultipleNestedChildComponentsGenerator.Child2ComponentText}";
+
+			await SUT.InvokeGeneratorAsync<StaticFileWithMultipleNestedChildComponentsGenerator>();
+
+			FileSystem
+				.Should()
+				.ContainSingleTextFile()
+				.Which
+				.Content
+				.Should()
+				.Be(expectedContent);
+		}
+
 		[Fact(DisplayName = "given generator that creates multiple file, " +
 							"when invoking generator, " +
 							"then generated files is added to file system in generated order")]
