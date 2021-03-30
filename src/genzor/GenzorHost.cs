@@ -83,6 +83,49 @@ namespace Genzor
 		}
 
 		/// <summary>
+		/// Adds a singleton service of the type specified in <typeparamref name="TService"/> with an implementation
+		/// type specified in <typeparamref name="TImplementation"/> to the <see cref="GenzorHost"/>.
+		/// </summary>
+		/// <typeparam name="TService">The type of the service to add.</typeparam>
+		/// <typeparam name="TImplementation">The type of the implementation to use.</typeparam>
+		/// <returns>The <see cref="GenzorHost"/> so that additional calls can be chained.</returns>
+		public GenzorHost AddService<TService, TImplementation>()
+			where TService : class
+			where TImplementation : class, TService
+		{
+			collection.AddSingleton<TService, TImplementation>();
+			return this;
+		}
+
+		/// <summary>
+		/// Adds a singleton service of the type specified in <typeparamref name="TService"/> with an instance specified
+		/// in <paramref name="implementationInstance"/> to the <see cref="GenzorHost"/>.
+		/// </summary>
+		/// <typeparam name="TService">The type of the service to add.</typeparam>
+		/// <param name="implementationInstance">The instance of the service.</param>
+		/// <returns>The <see cref="GenzorHost"/> so that additional calls can be chained.</returns>
+		public GenzorHost AddService<TService>(TService implementationInstance)
+			where TService : class
+		{
+			collection.AddSingleton<TService>(implementationInstance);
+			return this;
+		}
+
+		/// <summary>
+		/// Adds a singleton service of the type specified in <typeparamref name="TService"/> with a factory specified
+		/// in <paramref name="implementationFactory"/> to the specified <see cref="GenzorHost"/>.
+		/// </summary>
+		/// <typeparam name="TService">The type of the service to add.</typeparam>
+		/// <param name="implementationFactory">The factory that creates the service.</param>
+		/// <returns>The <see cref="GenzorHost"/> so that additional calls can be chained.</returns>
+		public GenzorHost AddService<TService>(Func<IServiceProvider, TService> implementationFactory)
+			where TService : class
+		{
+			collection.AddSingleton<TService>(implementationFactory);
+			return this;
+		}
+
+		/// <summary>
 		/// Invoke (render) the <typeparamref name="TComponent"/> generator and add
 		/// any <see cref="IDirectoryComponent"/> or <see cref="IFileComponent"/> components
 		/// to the <see cref="IFileSystem"/> registered with the <see cref="IServiceProvider"/>.
