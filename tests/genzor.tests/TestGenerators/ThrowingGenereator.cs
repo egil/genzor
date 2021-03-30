@@ -10,6 +10,6 @@ namespace Genzor.TestGenerators
 
 		protected override void OnInitialized() => throw new ThrowingGenereatorException();
 
-		public sealed class ThrowingGenereatorException : Exception { }
+		internal sealed class ThrowingGenereatorException : Exception { }
 	}
 }

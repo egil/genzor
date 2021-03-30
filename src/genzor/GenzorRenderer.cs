@@ -42,9 +42,14 @@ namespace Genzor
 
 		private void AddItemsToFileSystem(int componentId, IComponent component)
 		{
-			if (component is IFileComponent fileComponent)
+			switch (component)
 			{
-				AddFileToFileSystem(componentId, fileComponent);
+				case IFileComponent fc:
+					AddFileToFileSystem(componentId, fc);
+					break;
+				case IDirectoryComponent d:
+					AddDirectoryToFileSystem(componentId, d);
+					break;
 			}
 
 			var frames = GetCurrentRenderTreeFrames(componentId);
@@ -53,10 +58,17 @@ namespace Genzor
 			{
 				ref var frame = ref frames.Array[i];
 
-				if (frame.FrameType == RenderTreeFrameType.Component
-					&& frame.Component is IFileComponent fc)
+				if (frame.FrameType == RenderTreeFrameType.Component)
 				{
-					AddFileToFileSystem(frame.ComponentId, fc);
+					switch (frame.Component)
+					{
+						case IFileComponent fc:
+							AddFileToFileSystem(frame.ComponentId, fc);
+							break;
+						case IDirectoryComponent d:
+							AddDirectoryToFileSystem(frame.ComponentId, d);
+							break;
+					}
 				}
 			}
 		}
@@ -68,6 +80,12 @@ namespace Genzor
 			var newPosition = RenderFrames(context, frames, 0, frames.Count);
 			Debug.Assert(newPosition == frames.Count, "All render frames for component was not processes.");
 			var file = new File(component.Name, string.Join(null, context.Result));
+			fileSystem.AddItem(file);
+		}
+
+		private void AddDirectoryToFileSystem(int componentId, IDirectoryComponent component)
+		{
+			var file = new FileSystem.Internal.Directory(component.Name);
 			fileSystem.AddItem(file);
 		}
 

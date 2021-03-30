@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Components;
 
 namespace Genzor.Components
 {
-	public interface IFileComponent : IComponent
+	public interface IDirectoryComponent : IComponent
 	{
 		/// <summary>
-		/// Gets the name of the file the component renders.
+		/// Gets the name of the directory the component renders.
 		/// </summary>
 		string Name { get; }
 	}

@@ -16,7 +16,18 @@ namespace Genzor
 
 		public IFileSystem FileSystem => Services.GetRequiredService<IFileSystem>();
 
-		public GenzorRendererTest(ITestOutputHelper outputHelper) : base(outputHelper) { }	
+		public GenzorRendererTest(ITestOutputHelper outputHelper) : base(outputHelper) { }
+
+		[Fact(DisplayName = "when invoking a generator which throws an exception, " +
+							"then the exception is re-thrown to caller")]
+		public void Test102()
+		{
+			Func<Task> throwingAction = () => SUT.InvokeGeneratorAsync<ThrowingGenereator>();
+
+			throwingAction
+				.Should()
+				.Throw<ThrowingGenereator.ThrowingGenereatorException>();
+		}
 
 		[Fact(DisplayName = "given generator that creates a file, " +
 							"when invoking generator, " +
@@ -79,15 +90,22 @@ namespace Genzor
 				});
 		}
 
-		[Fact(DisplayName = "when invoking generator that throws exception, " +
-							"then the exception is re-thrown to caller")]
-		public void Test102()
+		[Fact(DisplayName = "given generator that creates a directory, " +
+							"when invoking generator, " +
+							"then generated directory is added to file system")]
+		public async Task Test031()
 		{
-			Func<Task> throwingAction = () => SUT.InvokeGeneratorAsync<ThrowingGenereator>();
+			await SUT.InvokeGeneratorAsync<StaticDirectoryGenerator>();
 
-			throwingAction
+			FileSystem
 				.Should()
-				.Throw<ThrowingGenereator.ThrowingGenereatorException>();
+				.ContainSingleDirectory()
+				.Which
+				.Should()
+				.BeEquivalentTo(new
+				{
+					Name = new StaticDirectoryGenerator().Name,
+				});
 		}
 	}
 }

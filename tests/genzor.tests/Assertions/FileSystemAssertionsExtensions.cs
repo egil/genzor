@@ -23,6 +23,21 @@ namespace FluentAssertions
 		{
 		}
 
+		public AndWhichConstraint<FileSystemAssertions, IDirectory> ContainSingleDirectory(string because = "", params object[] becauseArgs)
+		{
+			using var scope = new AssertionScope(Identifier);
+
+			var directory = Subject.Root
+				.Should()
+				.ContainSingle(because, becauseArgs)
+				.Subject
+				.Should()
+				.BeAssignableTo<IDirectory>(because, becauseArgs)
+				.Subject;
+
+			return new AndWhichConstraint<FileSystemAssertions, IDirectory>(this, directory);
+		}
+
 		public AndWhichConstraint<FileSystemAssertions, IFile> ContainSingleFile(string because = "", params object[] becauseArgs)
 		{
 			using var scope = new AssertionScope(Identifier);
