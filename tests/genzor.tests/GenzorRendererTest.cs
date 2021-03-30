@@ -74,14 +74,14 @@ namespace Genzor
 
 		[Fact(DisplayName = "given file generator which has a directory as its content, " +
 							"when invoking generator, " +
-							"then an InvalidFileComponentContentException is thrown")]
+							"then an InvalidGeneratorComponentContentException is thrown")]
 		public async Task Test012()
 		{
 			Func<Task> throwingAction = () => SUT.InvokeGeneratorAsync<FileWithDirectoryGenerator>();
 
 			await throwingAction
 				.Should()
-				.ThrowAsync<InvalidFileComponentContentException>()
+				.ThrowAsync<InvalidGeneratorComponentContentException>()
 				.WithMessage($"A directory component ({nameof(IDirectoryComponent)}) cannot be the child of a file component ({nameof(IFileComponent)}). Name of misplaced directory: {FileWithDirectoryGenerator.DirectoryName}");
 		}
 
@@ -175,5 +175,7 @@ namespace Genzor
 					new { Name = TwoDirectoryGenerator.SecondDirectoryName },
 				});
 		}
+
+
 	}
 }
