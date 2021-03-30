@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Genzor.FileSystem;
 
-namespace Genzor
+namespace Genzor.TestDoubles
 {
-	internal class FakeFileSystem : IFileSystem
+	public class FakeFileSystem : IFileSystem
 	{
 		private readonly List<IFileSystemItem> items = new();
 

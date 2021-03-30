@@ -31,6 +31,12 @@ namespace FluentAssertions
 			return new AndConstraint<DirectoryAssertions>(this);
 		}
 
+		public AndConstraint<DirectoryAssertions> WithoutItems(string because = "", params object[] becauseArgs)
+		{
+			((IReadOnlyList<IFileSystemItem>)Subject).Should().BeEmpty(because, becauseArgs);
+			return new AndConstraint<DirectoryAssertions>(this);
+		}
+
 		public AndConstraint<DirectoryAssertions> WithItemsEquivalentTo<TExpectation>(IEnumerable<TExpectation> expectation, string because = "", params object[] becauseArgs)
 		{
 			((IReadOnlyList<IFileSystemItem>)Subject).Should().BeEquivalentTo(expectation, because, becauseArgs);

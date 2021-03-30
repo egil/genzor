@@ -4,22 +4,23 @@ using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
 using Genzor.Assertions;
 using Genzor.FileSystem;
+using Genzor.TestDoubles;
 
 namespace FluentAssertions
 {
 	public static class FileSystemAssertionsExtensions
 	{
-		public static FileSystemAssertions Should(this IFileSystem fileSystem)
+		public static FileSystemAssertions Should(this FakeFileSystem fileSystem)
 		{
 			return new FileSystemAssertions(fileSystem);
 		}
 	}
 
-	public class FileSystemAssertions : ReferenceTypeAssertions<IFileSystem, FileSystemAssertions>
+	public class FileSystemAssertions : ReferenceTypeAssertions<FakeFileSystem, FileSystemAssertions>
 	{
 		protected override string Identifier { get; } = "file system";
 
-		public FileSystemAssertions(IFileSystem subject) : base(subject)
+		public FileSystemAssertions(FakeFileSystem subject) : base(subject)
 		{
 		}
 

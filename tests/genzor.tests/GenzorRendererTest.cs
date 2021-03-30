@@ -3,9 +3,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using Genzor.Components;
-using Genzor.FileSystem;
 using Genzor.TestGenerators;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -13,17 +11,13 @@ namespace Genzor
 {
 	public class GenzorRendererTest : GenzorTestBase
 	{
-		public GenzorRenderer SUT => Services.GetRequiredService<GenzorRenderer>();
-
-		public IFileSystem FileSystem => Services.GetRequiredService<IFileSystem>();
-
 		public GenzorRendererTest(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
 		[Fact(DisplayName = "when invoking a generator which throws an exception, " +
 							"then the exception is re-thrown to caller")]
 		public void Test102()
 		{
-			Func<Task> throwingAction = () => SUT.InvokeGeneratorAsync<ThrowingGenereator>();
+			Func<Task> throwingAction = () => Host.InvokeGeneratorAsync<ThrowingGenereator>();
 
 			throwingAction
 				.Should()
@@ -35,7 +29,7 @@ namespace Genzor
 							"then a generated file is added to file system")]
 		public async Task Test001()
 		{
-			await SUT.InvokeGeneratorAsync<StaticFileGenerator>();
+			await Host.InvokeGeneratorAsync<StaticFileGenerator>();
 
 			FileSystem
 				.Should()
@@ -51,7 +45,7 @@ namespace Genzor
 							  "then parameters are passed to generator")]
 		public async Task Test011(string filename, string content)
 		{
-			await SUT.InvokeGeneratorAsync<GenericFileGenerator>(
+			await Host.InvokeGeneratorAsync<GenericFileGenerator>(
 				CreateParametersView(
 					("Name", filename),
 					("ChildContent", content)));
@@ -69,7 +63,7 @@ namespace Genzor
 							"then an InvalidGeneratorComponentContentException is thrown")]
 		public async Task Test012()
 		{
-			Func<Task> throwingAction = () => SUT.InvokeGeneratorAsync<FileWithDirectoryGenerator>();
+			Func<Task> throwingAction = () => Host.InvokeGeneratorAsync<FileWithDirectoryGenerator>();
 
 			await throwingAction
 				.Should()
@@ -82,7 +76,7 @@ namespace Genzor
 							"then content from child components are part of generated files content")]
 		public async Task Test013()
 		{
-			await SUT.InvokeGeneratorAsync<StaticFileWithChildComponentGenerator>();
+			await Host.InvokeGeneratorAsync<StaticFileWithChildComponentGenerator>();
 
 			FileSystem
 				.Should()
@@ -98,7 +92,7 @@ namespace Genzor
 			var expectedContent = $"{StaticFileWithMultipleNestedChildComponentsGenerator.Child1ComponentText}" +
 								  $"{StaticFileWithMultipleNestedChildComponentsGenerator.Child2ComponentText}";
 
-			await SUT.InvokeGeneratorAsync<StaticFileWithMultipleNestedChildComponentsGenerator>();
+			await Host.InvokeGeneratorAsync<StaticFileWithMultipleNestedChildComponentsGenerator>();
 
 			FileSystem
 				.Should()
@@ -111,7 +105,7 @@ namespace Genzor
 							"then wrapped file component is added to file system")]
 		public async Task Test015()
 		{
-			await SUT.InvokeGeneratorAsync<StaticWithMultipleNestedComponentsWrappingFileGenerator>();
+			await Host.InvokeGeneratorAsync<StaticWithMultipleNestedComponentsWrappingFileGenerator>();
 
 			FileSystem
 				.Should()
@@ -124,7 +118,7 @@ namespace Genzor
 							"then generated files is added to file system in generated order")]
 		public async Task Test021()
 		{
-			await SUT.InvokeGeneratorAsync<TwoFileGenerator>();
+			await Host.InvokeGeneratorAsync<TwoFileGenerator>();
 
 			FileSystem
 				.Should()
@@ -143,7 +137,7 @@ namespace Genzor
 							"then generated directory is added to file system")]
 		public async Task Test031()
 		{
-			await SUT.InvokeGeneratorAsync<StaticDirectoryGenerator>();
+			await Host.InvokeGeneratorAsync<StaticDirectoryGenerator>();
 
 			FileSystem
 				.Should()
@@ -156,7 +150,7 @@ namespace Genzor
 							"then generated directories is added to file system")]
 		public async Task Test032()
 		{
-			await SUT.InvokeGeneratorAsync<TwoDirectoryGenerator>();
+			await Host.InvokeGeneratorAsync<TwoDirectoryGenerator>();
 
 			FileSystem
 				.Should()
@@ -175,7 +169,7 @@ namespace Genzor
 							"then the generated file is added to the generated directory")]
 		public async Task Test033()
 		{
-			await SUT.InvokeGeneratorAsync<DirectoryWithFileGenerator>();
+			await Host.InvokeGeneratorAsync<DirectoryWithFileGenerator>();
 
 			FileSystem
 				.Should()
@@ -191,7 +185,7 @@ namespace Genzor
 					"then the generated file is added to the generated directory")]
 		public async Task Test034()
 		{
-			await SUT.InvokeGeneratorAsync<StaticFileWithMultipleNestedComponentsWrappingItemsGenerator>();
+			await Host.InvokeGeneratorAsync<StaticFileWithMultipleNestedComponentsWrappingItemsGenerator>();
 
 			FileSystem
 				.Should()

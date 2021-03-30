@@ -7,11 +7,12 @@ using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Genzor.Components;
 using Genzor.FileSystem;
-using Genzor.FileSystem.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using FSDirectory = Genzor.FileSystem.Internal.Directory;
+using FSTextFile = Genzor.FileSystem.Internal.TextFile;
 
 namespace Genzor
 {
@@ -91,7 +92,7 @@ namespace Genzor
 		private IDirectory GetDirectoryWithItems(int componentId, IDirectoryComponent component)
 		{
 			var items = GetFileSystemItems(componentId);
-			return new Directory(component.Name, items);
+			return new FSDirectory(component.Name, items);
 		}
 
 		private List<IFileSystemItem> GetFileSystemItems(int parentComponentId)
@@ -122,7 +123,7 @@ namespace Genzor
 		private IFileSystemItem GetFile(int componentId, IFileComponent component)
 		{
 			var content = fileContentVisitor.GetTextContent(componentId);
-			var file = new TextFile(component.Name, content);
+			var file = new FSTextFile(component.Name, content);
 			return file;
 		}
 
