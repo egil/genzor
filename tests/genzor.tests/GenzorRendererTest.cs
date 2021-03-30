@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
+using Genzor.Components;
 using Genzor.FileSystem;
 using Genzor.TestGenerators;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,8 +44,8 @@ namespace Genzor
 				.Should()
 				.BeEquivalentTo(new
 				{
-					Name = new StaticFileGenerator().Name,
-					Content = new StaticFileGenerator().Content,
+					Name = StaticFileGenerator.NameText,
+					Content = StaticFileGenerator.ContentText,
 				});
 		}
 
@@ -104,7 +105,7 @@ namespace Genzor
 				.Should()
 				.BeEquivalentTo(new
 				{
-					Name = new StaticDirectoryGenerator().Name,
+					Name = StaticDirectoryGenerator.NameText,
 				});
 		}
 

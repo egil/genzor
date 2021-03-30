@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -5,8 +6,8 @@ namespace Genzor.TestGenerators
 {
 	public class TwoDirectoryGenerator : ComponentBase
 	{
-		public const string FirstDirectoryName = "DIR 1";
-		public const string SecondDirectoryName = "DIR 2";
+		public static readonly string FirstDirectoryName = Guid.NewGuid().ToString();
+		public static readonly string SecondDirectoryName = Guid.NewGuid().ToString();
 
 		protected override void BuildRenderTree(RenderTreeBuilder builder)
 		{

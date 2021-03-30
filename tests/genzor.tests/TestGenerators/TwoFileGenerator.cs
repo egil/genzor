@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -5,8 +6,8 @@ namespace Genzor.TestGenerators
 {
 	public class TwoFileGenerator : ComponentBase
 	{
-		public const string FirstFilesName = "file1.txt";
-		public const string SecondFilesName = "file2.txt";
+		public static readonly string FirstFilesName = Guid.NewGuid().ToString();
+		public static readonly string SecondFilesName = Guid.NewGuid().ToString();
 
 		protected override void BuildRenderTree(RenderTreeBuilder builder)
 		{
