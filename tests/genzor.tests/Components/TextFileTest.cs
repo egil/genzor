@@ -21,7 +21,7 @@ namespace Genzor.Components
 							  "then a empty file with specified name is added to file system")]
 		public async Task Test001(string fileName)
 		{
-			await Host.InvokeGeneratorAsync<TextFile>(CreateParametersView((nameof(TextFile.Name), fileName)));
+			await Host.InvokeGeneratorAsync<TextFile>(ps => ps.Add(p => p.Name, fileName));
 
 			FileSystem
 				.Should()
@@ -37,10 +37,9 @@ namespace Genzor.Components
 							  "then a file with content and specified name is added to file system")]
 		public async Task Test002(string fileName, string content)
 		{
-			await Host.InvokeGeneratorAsync<TextFile>(
-				CreateParametersView(
-					(nameof(TextFile.Name), fileName),
-					(nameof(TextFile.ChildContent), content)));
+			await Host.InvokeGeneratorAsync<TextFile>(ps => ps
+				.Add(p => p.Name, fileName)
+				.Add(p => p.ChildContent, content));
 
 			FileSystem
 				.Should()

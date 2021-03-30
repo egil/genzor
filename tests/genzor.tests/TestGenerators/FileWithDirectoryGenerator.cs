@@ -14,8 +14,8 @@ namespace Genzor.TestGenerators
 
 		protected override void BuildRenderTree(RenderTreeBuilder builder)
 		{
-			builder.OpenComponent<GenericDirectoryGenerator>(0);
-			builder.AddAttribute(1, nameof(GenericDirectoryGenerator.Name), DirectoryName);
+			builder.OpenComponent<Directory>(0);
+			builder.AddAttribute(1, nameof(Directory.Name), DirectoryName);
 			builder.CloseComponent();
 		}
 	}

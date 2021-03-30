@@ -45,10 +45,9 @@ namespace Genzor
 							  "then parameters are passed to generator")]
 		public async Task Test011(string filename, string content)
 		{
-			await Host.InvokeGeneratorAsync<GenericFileGenerator>(
-				CreateParametersView(
-					("Name", filename),
-					("ChildContent", content)));
+			await Host.InvokeGeneratorAsync<TextFile>(ps => ps
+				.Add(p => p.Name, filename)
+				.Add(p => p.ChildContent, content));
 
 			FileSystem
 				.Should()

@@ -23,26 +23,6 @@ namespace Genzor
 			Host.AddLogging((builder) => builder.AddXUnit(outputHelper).SetMinimumLevel(LogLevel.Debug));
 		}
 
-		protected static ParameterView CreateParametersView(params (string name, object value)[] parameters)
-		{
-			var dict = new Dictionary<string, object>(StringComparer.Ordinal);
-
-			foreach (var pkv in parameters)
-			{
-				if (pkv.name == "ChildContent" && pkv.value is string text)
-				{
-					RenderFragment value = b => b.AddContent(0, text);
-					dict.Add(pkv.name, value);
-				}
-				else
-				{
-					dict.Add(pkv.name, pkv.value);
-				}
-			}
-
-			return ParameterView.FromDictionary(dict);
-		}
-
 		protected virtual void Dispose(bool disposing)
 		{
 			if (!disposedValue)

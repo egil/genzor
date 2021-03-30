@@ -90,8 +90,24 @@ namespace Genzor
 		/// <typeparam name="TComponent">The generator component to invoke.</typeparam>
 		/// <param name="initialParameters">Optional parameters to pass to the generator.</param>
 		/// <returns>A <see cref="Task"/> that completes when the generator finishes.</returns>
-		public Task InvokeGeneratorAsync<TComponent>(ParameterView? initialParameters = null) where TComponent : IComponent
+		public Task InvokeGeneratorAsync<TComponent>(ParameterView? initialParameters) where TComponent : IComponent
 			=> Renderer.InvokeGeneratorAsync<TComponent>(initialParameters);
+
+		/// <summary>
+		/// Invoke (render) the <typeparamref name="TComponent"/> generator and add
+		/// any <see cref="IDirectoryComponent"/> or <see cref="IFileComponent"/> components
+		/// to the <see cref="IFileSystem"/> registered with the <see cref="IServiceProvider"/>.
+		/// </summary>
+		/// <typeparam name="TComponent">The generator component to invoke.</typeparam>
+		/// <param name="parametersBuilder">A optional parameter builder action.</param>
+		/// <returns>A <see cref="Task"/> that completes when the generator finishes.</returns>
+		public Task InvokeGeneratorAsync<TComponent>(Action<ParameterViewBuilder<TComponent>>? parametersBuilder = null)
+			where TComponent : IComponent
+		{
+			var pvb = new ParameterViewBuilder<TComponent>();
+			parametersBuilder?.Invoke(pvb);
+			return Renderer.InvokeGeneratorAsync<TComponent>(pvb.Build());
+		}
 
 		/// <inheritdoc/>
 		public void Dispose()

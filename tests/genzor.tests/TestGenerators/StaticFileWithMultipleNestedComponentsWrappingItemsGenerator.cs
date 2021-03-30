@@ -1,16 +1,17 @@
 using System;
+using Genzor.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Genzor.TestGenerators
 {
-	public class StaticFileWithMultipleNestedComponentsWrappingItemsGenerator : GenericDirectoryGenerator
+	public class StaticFileWithMultipleNestedComponentsWrappingItemsGenerator : ComponentBase, IDirectoryComponent
 	{
 		public static readonly string DirectoryName = Guid.NewGuid().ToString();
 		public static readonly string NestedFileName = nameof(NestedFileName) + Guid.NewGuid().ToString();
 		public static readonly string NestedDirectoryName = nameof(NestedDirectoryName) + Guid.NewGuid().ToString();
 
-		public override string Name { get; set; } = DirectoryName;
+		public string Name { get; } = DirectoryName;
 
 		protected override void BuildRenderTree(RenderTreeBuilder builder)
 		{
@@ -33,11 +34,11 @@ namespace Genzor.TestGenerators
 
 		private void FileComponent(RenderTreeBuilder builder)
 		{
-			builder.OpenComponent<GenericFileGenerator>(0);
-			builder.AddAttribute(1, nameof(GenericFileGenerator.Name), NestedFileName);
+			builder.OpenComponent<TextFile>(0);
+			builder.AddAttribute(1, nameof(TextFile.Name), NestedFileName);
 			builder.CloseComponent();
-			builder.OpenComponent<GenericDirectoryGenerator>(10);
-			builder.AddAttribute(11, nameof(GenericDirectoryGenerator.Name), NestedDirectoryName);
+			builder.OpenComponent<Directory>(10);
+			builder.AddAttribute(11, nameof(Directory.Name), NestedDirectoryName);
 			builder.CloseComponent();
 		}
 	}

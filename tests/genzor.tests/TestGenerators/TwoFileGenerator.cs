@@ -1,4 +1,5 @@
 using System;
+using Genzor.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -11,11 +12,11 @@ namespace Genzor.TestGenerators
 
 		protected override void BuildRenderTree(RenderTreeBuilder builder)
 		{
-			builder.OpenComponent<GenericFileGenerator>(0);
-			builder.AddAttribute(1, nameof(GenericFileGenerator.Name), FirstFilesName);
+			builder.OpenComponent<TextFile>(0);
+			builder.AddAttribute(1, nameof(TextFile.Name), FirstFilesName);
 			builder.CloseComponent();
-			builder.OpenComponent<GenericFileGenerator>(10);
-			builder.AddAttribute(11, nameof(GenericFileGenerator.Name), SecondFilesName);
+			builder.OpenComponent<TextFile>(10);
+			builder.AddAttribute(11, nameof(TextFile.Name), SecondFilesName);
 			builder.CloseComponent();
 		}
 	}
