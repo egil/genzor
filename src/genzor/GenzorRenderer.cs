@@ -138,7 +138,7 @@ namespace Genzor
 					context.Result.Add(frame.MarkupContent);
 					return ++position;
 				case RenderTreeFrameType.Component when frame.Component is IDirectoryComponent dc:
-					throw InvalidGeneratorComponentContentException.CreateDirectoryNotAllowed(dc.Name);
+					throw InvalidGeneratorComponentContentException.CreateUnexpectedDirectoryException(dc.Name);
 				case RenderTreeFrameType.Component when frame.Component is not IDirectoryComponent:
 					return RenderChildComponent(context, frames, position);
 				case RenderTreeFrameType.Region:

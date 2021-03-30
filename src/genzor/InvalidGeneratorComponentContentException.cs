@@ -14,7 +14,7 @@ namespace Genzor
 			: base(info, context)
 		{ }
 
-		public static InvalidGeneratorComponentContentException CreateDirectoryNotAllowed(string directoryName)
+		public static InvalidGeneratorComponentContentException CreateUnexpectedDirectoryException(string directoryName)
 			=> new InvalidGeneratorComponentContentException(
 				$"A directory component ({nameof(IDirectoryComponent)}) cannot be the child of a file component ({nameof(IFileComponent)}). Name of misplaced directory: {directoryName}");
 	}
