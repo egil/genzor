@@ -10,7 +10,7 @@ env:
   NUGET_REPO_URL: 'https://nuget.pkg.github.com/egil/index.json'
 
 jobs:
-  merge-to-stable:
+  create-pre-release:
     runs-on: ubuntu-latest
     steps:
       - name: 🛒 Checkout repository
