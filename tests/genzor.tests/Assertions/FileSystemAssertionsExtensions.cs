@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
 using Genzor.FileSystem;
@@ -38,7 +37,18 @@ namespace FluentAssertions
 			return new AndWhichConstraint<FileSystemAssertions, IDirectory>(this, directory);
 		}
 
-		public AndWhichConstraint<FileSystemAssertions, IFile> ContainSingleFile(string because = "", params object[] becauseArgs)
+		public AndWhichConstraint<FileSystemAssertions, IEnumerable<IDirectory>> HaveDirectories(int count, string because = "", params object[] becauseArgs)
+		{
+			using var scope = new AssertionScope(Identifier);
+
+			AndConstraint<Collections.GenericCollectionAssertions<IDirectory>> files = Subject.Root.OfType<IDirectory>()
+				.Should()
+				.HaveCount(count, because, becauseArgs);
+
+			return new AndWhichConstraint<FileSystemAssertions, IEnumerable<IDirectory>>(this, files.And.Subject);
+		}
+
+		public AndWhichConstraint<FileSystemAssertions, IFile<string>> ContainSingleTextFile(string because = "", params object[] becauseArgs)
 		{
 			using var scope = new AssertionScope(Identifier);
 
@@ -47,21 +57,21 @@ namespace FluentAssertions
 				.ContainSingle(because, becauseArgs)
 				.Subject
 				.Should()
-				.BeAssignableTo<IFile>(because, becauseArgs)
+				.BeAssignableTo<IFile<string>>(because, becauseArgs)
 				.Subject;
 
-			return new AndWhichConstraint<FileSystemAssertions, IFile>(this, file);
+			return new AndWhichConstraint<FileSystemAssertions, IFile<string>>(this, file);
 		}
 
-		public AndWhichConstraint<FileSystemAssertions, IEnumerable<IFile>> HaveFiles(int count, string because = "", params object[] becauseArgs)
+		public AndWhichConstraint<FileSystemAssertions, IEnumerable<IFile<string>>> HaveTextFiles(int count, string because = "", params object[] becauseArgs)
 		{
 			using var scope = new AssertionScope(Identifier);
 
-			AndConstraint<Collections.GenericCollectionAssertions<IFile>> files = Subject.Root.OfType<IFile>()
+			AndConstraint<Collections.GenericCollectionAssertions<IFile<string>>> files = Subject.Root.OfType<IFile<string>>()
 				.Should()
 				.HaveCount(count, because, becauseArgs);
 
-			return new AndWhichConstraint<FileSystemAssertions, IEnumerable<IFile>>(this, files.And.Subject);
+			return new AndWhichConstraint<FileSystemAssertions, IEnumerable<IFile<string>>>(this, files.And.Subject);
 		}
 	}
 }

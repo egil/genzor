@@ -1,10 +1,10 @@
 namespace Genzor.FileSystem
 {
-	public interface IFile : IFileSystemItem
+	public interface IFile<out TContent> : IFileSystemItem
 	{
 		/// <summary>
 		/// Gets the content of the file.
 		/// </summary>
-		string Content { get; }
+		TContent Content { get; }
 	}
 }

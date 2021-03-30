@@ -38,7 +38,7 @@ namespace Genzor
 
 			FileSystem
 				.Should()
-				.ContainSingleFile()
+				.ContainSingleTextFile()
 				.Subject
 				.Should()
 				.BeEquivalentTo(new
@@ -61,7 +61,7 @@ namespace Genzor
 
 			FileSystem
 				.Should()
-				.ContainSingleFile()
+				.ContainSingleTextFile()
 				.Subject
 				.Should()
 				.BeEquivalentTo(new
@@ -80,7 +80,7 @@ namespace Genzor
 
 			FileSystem
 				.Should()
-				.HaveFiles(2)
+				.HaveTextFiles(2)
 				.Which
 				.Should()
 				.BeEquivalentTo(new[]
@@ -105,6 +105,25 @@ namespace Genzor
 				.BeEquivalentTo(new
 				{
 					Name = new StaticDirectoryGenerator().Name,
+				});
+		}
+
+		[Fact(DisplayName = "given generator that creates multiple directories, " +
+							"when invoking generator, " +
+							"then generated directories is added to file system")]
+		public async Task Test032()
+		{
+			await SUT.InvokeGeneratorAsync<TwoDirectoryGenerator>();
+
+			FileSystem
+				.Should()
+				.HaveDirectories(2)
+				.Which
+				.Should()
+				.BeEquivalentTo(new[]
+				{
+					new { Name = TwoDirectoryGenerator.FirstDirectoryName },
+					new { Name = TwoDirectoryGenerator.SecondDirectoryName },
 				});
 		}
 	}

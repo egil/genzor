@@ -79,7 +79,7 @@ namespace Genzor
 			var context = new HtmlRenderingContext();
 			var newPosition = RenderFrames(context, frames, 0, frames.Count);
 			Debug.Assert(newPosition == frames.Count, "All render frames for component was not processes.");
-			var file = new File(component.Name, string.Join(null, context.Result));
+			var file = new TextFile(component.Name, string.Join(null, context.Result));
 			fileSystem.AddItem(file);
 		}
 
