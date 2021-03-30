@@ -15,13 +15,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Genzor
 {
-	public class Generator : Renderer
+	public sealed class GenzorRenderer : Renderer
 	{
 		private readonly IFileSystem fileSystem;
 
 		public override Dispatcher Dispatcher { get; } = Dispatcher.CreateDefault();
 
-		public Generator(IServiceProvider services, ILoggerFactory loggerFactory)
+		public GenzorRenderer(IServiceProvider services, ILoggerFactory loggerFactory)
 			: base(services, loggerFactory)
 		{
 			fileSystem = services.GetRequiredService<IFileSystem>();

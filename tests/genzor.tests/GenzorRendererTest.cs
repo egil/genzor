@@ -1,36 +1,22 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using Genzor.FileSystem;
 using Genzor.TestGenerators;
-using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Genzor
 {
-	public class GeneratorTest
+	public class GenzorRendererTest : GenzorTestBase
 	{
-		private IServiceProvider Services { get; }
+		public GenzorRenderer SUT => Services.GetRequiredService<GenzorRenderer>();
 
-		private Generator SUT => Services.GetRequiredService<Generator>();
+		public IFileSystem FileSystem => Services.GetRequiredService<IFileSystem>();
 
-		private IFileSystem FileSystem => Services.GetRequiredService<IFileSystem>();
-
-		public GeneratorTest(ITestOutputHelper outputHelper)
-		{
-			var services = new ServiceCollection();
-			services.AddLogging((builder) => builder.AddXUnit(outputHelper).SetMinimumLevel(LogLevel.Debug));
-			services.AddSingleton<FakeFileSystem>();
-			services.AddSingleton<IFileSystem>(s => s.GetRequiredService<FakeFileSystem>());
-			services.AddSingleton<Generator>();
-
-			Services = services.BuildServiceProvider();
-		}
+		public GenzorRendererTest(ITestOutputHelper outputHelper) : base(outputHelper) { }	
 
 		[Fact(DisplayName = "given generator that creates a file, " +
 							"when invoking generator, " +
@@ -102,26 +88,6 @@ namespace Genzor
 			throwingAction
 				.Should()
 				.Throw<ThrowingGenereator.ThrowingGenereatorException>();
-		}
-
-		private static ParameterView CreateParametersView(params (string name, object value)[] parameters)
-		{
-			var dict = new Dictionary<string, object>(StringComparer.Ordinal);
-
-			foreach (var pkv in parameters)
-			{
-				if (pkv.name == "ChildContent" && pkv.value is string text)
-				{
-					RenderFragment value = b => b.AddContent(0, text);
-					dict.Add(pkv.name, value);
-				}
-				else
-				{
-					dict.Add(pkv.name, pkv.value);
-				}
-			}
-
-			return ParameterView.FromDictionary(dict);
 		}
 	}
 }
