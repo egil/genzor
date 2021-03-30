@@ -137,7 +137,9 @@ namespace Genzor
 				case RenderTreeFrameType.Markup:
 					context.Result.Add(frame.MarkupContent);
 					return ++position;
-				case RenderTreeFrameType.Component:
+				case RenderTreeFrameType.Component when frame.Component is IDirectoryComponent dc:
+					throw InvalidFileComponentContentException.CreateDirectoryNotAllowed(dc.Name);
+				case RenderTreeFrameType.Component when frame.Component is not IDirectoryComponent:
 					return RenderChildComponent(context, frames, position);
 				case RenderTreeFrameType.Region:
 					return RenderFrames(context, frames, position + 1, frame.RegionSubtreeLength - 1);
