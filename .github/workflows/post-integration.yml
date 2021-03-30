@@ -1,0 +1,51 @@
+name: "Post-Integration"
+
+on:
+  push:
+    branches:
+      - main
+      - '!release'
+
+env:
+  NUGET_REPO_URL: 'https://nuget.pkg.github.com/egil/index.json'
+
+jobs:
+  create-pre-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛒 Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ⚛️ Sets environment variables - branch-name
+        uses: nelonoel/branch-name@v1.0.1
+
+      - name: ⚛️ Sets environment variables - Nerdbank.GitVersioning
+        uses: dotnet/nbgv@master
+        with:
+          setAllVars: true
+
+      - name: ⚙️ Setup dotnet 5.0.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: 🧹 Clean
+        run: dotnet clean -c Release && dotnet nuget locals all --clear
+
+      - name: 🔁 Restore packages
+        run: dotnet restore
+
+      - name: 🛠️ Build
+        run: dotnet build -c Release --no-restore -p:UseSourceLink=true
+
+      - name: 🧪 Run unit tests
+        run: dotnet test -c Release --no-build
+      
+      - name: 🗳️ Creating library package for pre-release
+        run: dotnet pack -c Release --no-restore -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=$BRANCH_NAME -p:PublicRelease=false -p:UseSourceLink=true
+
+      - name: 📦 Push packages to GitHub Package Registry
+        run: dotnet nuget push ${GITHUB_WORKSPACE}/packages/*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate
