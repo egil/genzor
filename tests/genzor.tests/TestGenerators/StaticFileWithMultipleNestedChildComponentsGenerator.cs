@@ -7,8 +7,8 @@ namespace Genzor.TestGenerators
 {
 	public class StaticFileWithMultipleNestedChildComponentsGenerator : ComponentBase, IFileComponent
 	{
-		public static readonly string Child1ComponentText = Guid.NewGuid().ToString();
-		public static readonly string Child2ComponentText = Guid.NewGuid().ToString();
+		public static readonly string Child1ComponentText = nameof(Child1ComponentText) + Guid.NewGuid().ToString();
+		public static readonly string Child2ComponentText = nameof(Child2ComponentText) + Guid.NewGuid().ToString();
 
 		public string Name { get; } = nameof(StaticFileWithChildComponentGenerator);
 

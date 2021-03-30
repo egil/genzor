@@ -186,19 +186,23 @@ namespace Genzor
 				.WithName(DirectoryWithFileGenerator.ChildFileName);
 		}
 
-		//[Fact(DisplayName = "given directory generator which none file system component as child content, " +
-		//					"when invoking generator, " +
-		//					"then an InvalidGeneratorComponentContentException is thrown")]
-		//public async Task Test033()
-		//{
-		//	Func<Task> throwingAction = () => SUT.InvokeGeneratorAsync<DirectoryWithNoneFileSystemComponentGenerator>();
+		[Fact(DisplayName = "given directory generator that multiple nested components that wraps other generator as its child, " +
+					"when invoking generator, " +
+					"then the generated file is added to the generated directory")]
+		public async Task Test034()
+		{
+			await SUT.InvokeGeneratorAsync<StaticFileWithMultipleNestedComponentsWrappingItemsGenerator>();
 
-		//	await throwingAction
-		//		.Should()
-		//		.ThrowAsync<InvalidGeneratorComponentContentException>()
-		//		.WithMessage($"A directory component ({nameof(IDirectoryComponent)}) can only have other directory components or file components ({nameof(IFileComponent)}) as its children. Type of misplaced component: {DirectoryWithNoneFileSystemComponentGenerator.ChildComponent.FullName}");
-		//}
-
-		// TODO: throw exception on invalid file or directory names (verify using Path.GetInvalidFileNameChars())
+			FileSystem
+				.Should()
+				.ContainSingleDirectory()
+				.WithName(StaticFileWithMultipleNestedComponentsWrappingItemsGenerator.DirectoryName)
+				.And
+				.WithItemsEquivalentTo(new[]
+				{
+					new { Name = StaticFileWithMultipleNestedComponentsWrappingItemsGenerator.NestedDirectoryName },
+					new { Name = StaticFileWithMultipleNestedComponentsWrappingItemsGenerator.NestedFileName },
+				});
+		}
 	}
 }

@@ -6,8 +6,8 @@ namespace Genzor.TestGenerators
 {
 	public class TwoDirectoryGenerator : ComponentBase
 	{
-		public static readonly string FirstDirectoryName = Guid.NewGuid().ToString();
-		public static readonly string SecondDirectoryName = Guid.NewGuid().ToString();
+		public static readonly string FirstDirectoryName = nameof(FirstDirectoryName) + Guid.NewGuid().ToString();
+		public static readonly string SecondDirectoryName = nameof(SecondDirectoryName) + Guid.NewGuid().ToString();
 
 		protected override void BuildRenderTree(RenderTreeBuilder builder)
 		{

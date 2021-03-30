@@ -31,33 +31,15 @@ namespace FluentAssertions
 			return new AndConstraint<DirectoryAssertions>(this);
 		}
 
-		public DirectoryAssertions ContainSingleDirectory(string because = "", params object[] becauseArgs)
+		public AndConstraint<DirectoryAssertions> WithItemsEquivalentTo<TExpectation>(IEnumerable<TExpectation> expectation, string because = "", params object[] becauseArgs)
 		{
-			var directory = Subject.Items
-				.Should()
-				.ContainSingle(because, becauseArgs)
-				.Subject
-				.Should()
-				.BeAssignableTo<IDirectory>(because, becauseArgs)
-				.Subject;
-
-			return new DirectoryAssertions(directory);
-		}
-
-		public AndWhichConstraint<DirectoryAssertions, IEnumerable<IDirectory>> HaveDirectories(int count, string because = "", params object[] becauseArgs)
-		{
-			using var scope = new AssertionScope(Identifier);
-
-			AndConstraint<Collections.GenericCollectionAssertions<IDirectory>> files = Subject.Items.OfType<IDirectory>()
-				.Should()
-				.HaveCount(count, because, becauseArgs);
-
-			return new AndWhichConstraint<DirectoryAssertions, IEnumerable<IDirectory>>(this, files.And.Subject);
+			((IReadOnlyList<IFileSystemItem>)Subject).Should().BeEquivalentTo(expectation, because, becauseArgs);
+			return new AndConstraint<DirectoryAssertions>(this);
 		}
 
 		public FileAssertions<string> ContainSingleTextFile(string because = "", params object[] becauseArgs)
 		{
-			var file = Subject.Items
+			var file = ((IReadOnlyList<IFileSystemItem>)Subject)
 				.Should()
 				.ContainSingle(because, becauseArgs)
 				.Subject
@@ -66,17 +48,6 @@ namespace FluentAssertions
 				.Subject;
 
 			return new FileAssertions<string>(file);
-		}
-
-		public AndWhichConstraint<DirectoryAssertions, IEnumerable<IFile<string>>> HaveTextFiles(int count, string because = "", params object[] becauseArgs)
-		{
-			using var scope = new AssertionScope(Identifier);
-
-			AndConstraint<Collections.GenericCollectionAssertions<IFile<string>>> files = Subject.Items.OfType<IFile<string>>()
-				.Should()
-				.HaveCount(count, because, becauseArgs);
-
-			return new AndWhichConstraint<DirectoryAssertions, IEnumerable<IFile<string>>>(this, files.And.Subject);
 		}
 	}
 }

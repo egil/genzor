@@ -5,6 +5,6 @@ namespace Genzor.TestGenerators
 {
 	public class GenericDirectoryGenerator : ComponentBase, IDirectoryComponent
 	{
-		[Parameter] public string Name { get; set; } = string.Empty;
+		[Parameter] public virtual string Name { get; set; } = string.Empty;
 	}
 }

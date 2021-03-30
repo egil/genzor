@@ -1,16 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Genzor.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
 
 namespace Genzor
 {
-    internal class FileContentRenderTreeVisitor
-    {
+	internal class FileContentRenderTreeVisitor
+	{
 		private readonly IRenderTree renderTree;
 
 		public FileContentRenderTreeVisitor(IRenderTree renderTree)

@@ -6,8 +6,8 @@ namespace Genzor.TestGenerators
 {
 	public class TwoFileGenerator : ComponentBase
 	{
-		public static readonly string FirstFilesName = Guid.NewGuid().ToString();
-		public static readonly string SecondFilesName = Guid.NewGuid().ToString();
+		public static readonly string FirstFilesName = nameof(FirstFilesName) + Guid.NewGuid().ToString();
+		public static readonly string SecondFilesName = nameof(SecondFilesName) + Guid.NewGuid().ToString();
 
 		protected override void BuildRenderTree(RenderTreeBuilder builder)
 		{
