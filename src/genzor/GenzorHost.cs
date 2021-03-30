@@ -5,6 +5,7 @@ using Genzor.FileSystem;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Genzor
 {
@@ -28,7 +29,7 @@ namespace Genzor
 				if (renderer is null)
 				{
 					serviceProvider = collection.BuildServiceProvider();
-					renderer = serviceProvider.GetRequiredService<GenzorRenderer>();
+					renderer = new GenzorRenderer(serviceProvider, serviceProvider.GetService<ILoggerFactory>() ?? NullLoggerFactory.Instance);
 				}
 
 				return renderer;
