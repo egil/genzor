@@ -1,8 +1,7 @@
-// Code copied from:
+// Some of the code in this class is copied from:
 // - https://source.dot.net/#Microsoft.AspNetCore.Mvc.ViewFeatures/RazorComponents/HtmlRenderer.cs
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
@@ -16,26 +15,56 @@ using Microsoft.Extensions.Logging;
 
 namespace Genzor
 {
+	/// <summary>
+	/// Represents a renderer for generator components. It will add any
+	/// <see cref="IDirectoryComponent"/> or <see cref="IFileComponent"/> components
+	/// to the <see cref="IFileSystem"/> registered with the <see cref="IServiceProvider"/>
+	/// passed to it.
+	/// </summary>
 	public sealed class GenzorRenderer : Renderer, IRenderTree
 	{
 		private readonly IFileSystem fileSystem;
 		private readonly FileContentRenderTreeVisitor fileContentVisitor;
+		private readonly ILogger<GenzorRenderer> logger;
 
+		/// <inheritdoc/>
 		public override Dispatcher Dispatcher { get; } = Dispatcher.CreateDefault();
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GenzorRenderer"/> class.
+		/// </summary>
+		/// <param name="services">The <see cref="IServiceProvider "/> to be used when initializing components and get dependencies from.</param>
+		/// <param name="loggerFactory">The <see cref="ILoggerFactory"/>.</param>
 		public GenzorRenderer(IServiceProvider services, ILoggerFactory loggerFactory)
 			: base(services, loggerFactory)
 		{
 			fileSystem = services.GetRequiredService<IFileSystem>();
 			fileContentVisitor = new FileContentRenderTreeVisitor(this);
+			logger = loggerFactory.CreateLogger<GenzorRenderer>();
 		}
 
+		/// <summary>
+		/// Invoke (render) the <typeparamref name="TComponent"/> generator and add
+		/// any <see cref="IDirectoryComponent"/> or <see cref="IFileComponent"/> components
+		/// to the <see cref="IFileSystem"/> registered with the <see cref="IServiceProvider"/>.
+		/// </summary>
+		/// <typeparam name="TComponent">The generator component to invoke.</typeparam>
+		/// <param name="initialParameters">Optional parameters to pass to the generator.</param>
+		/// <returns>A <see cref="Task"/> that completes when the generator finishes.</returns>
 		public Task InvokeGeneratorAsync<TComponent>(ParameterView? initialParameters = null)
 			where TComponent : IComponent
 		{
 			return InvokeGeneratorAsync(typeof(TComponent), initialParameters ?? ParameterView.Empty);
 		}
 
+		/// <summary>
+		/// Invoke (render) the <paramref name="componentType"/> generator and add
+		/// any <see cref="IDirectoryComponent"/> or <see cref="IFileComponent"/> components
+		/// to the <see cref="IFileSystem"/> registered with the <see cref="IServiceProvider"/>.
+		/// </summary>
+		/// <param name="componentType">The type of generator component to invoke.</param>
+		/// <param name="initialParameters">Optional parameters to pass to the generator.</param>
+		/// <returns>A <see cref="Task"/> that completes when the generator finishes.</returns>
 		public async Task InvokeGeneratorAsync(Type componentType, ParameterView initialParameters)
 		{
 			var (id, component) = await Dispatcher.InvokeAsync(() => CreateInitialRenderAsync(componentType, initialParameters));
@@ -109,8 +138,10 @@ namespace Genzor
 			return fileSystemItem is not null;
 		}
 
+		/// <inheritdoc/>
 		protected override void HandleException(Exception exception) => ExceptionDispatchInfo.Capture(exception).Throw();
 
+		/// <inheritdoc/>
 		protected override Task UpdateDisplayAsync(in RenderBatch renderBatch) => Task.CompletedTask;
 
 		private async Task<(int ComponentId, IComponent Component)> CreateInitialRenderAsync(Type componentType, ParameterView initialParameters)

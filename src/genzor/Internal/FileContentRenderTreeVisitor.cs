@@ -1,3 +1,5 @@
+// Some of the code in this class is copied from:
+// - https://source.dot.net/#Microsoft.AspNetCore.Mvc.ViewFeatures/RazorComponents/HtmlRenderer.cs
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -129,7 +131,7 @@ namespace Genzor
 				result.Add("</");
 				result.Add(frame.ElementName);
 				result.Add(">");
-				Debug.Assert(afterElement == position + frame.ElementSubtreeLength);
+				Debug.Assert(afterElement == position + frame.ElementSubtreeLength, "Unexpected position after processing element");
 				return afterElement;
 			}
 			else
@@ -138,7 +140,7 @@ namespace Genzor
 				result.Add("</");
 				result.Add(frame.ElementName);
 				result.Add(">");
-				Debug.Assert(afterAttributes == position + frame.ElementSubtreeLength);
+				Debug.Assert(afterAttributes == position + frame.ElementSubtreeLength, "Unexpected position after processing element");
 				return afterAttributes;
 			}
 		}
