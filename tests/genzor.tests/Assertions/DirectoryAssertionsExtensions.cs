@@ -33,8 +33,6 @@ namespace FluentAssertions
 
 		public DirectoryAssertions ContainSingleDirectory(string because = "", params object[] becauseArgs)
 		{
-			using var scope = new AssertionScope(Identifier);
-
 			var directory = Subject.Items
 				.Should()
 				.ContainSingle(because, becauseArgs)
@@ -59,8 +57,6 @@ namespace FluentAssertions
 
 		public FileAssertions<string> ContainSingleTextFile(string because = "", params object[] becauseArgs)
 		{
-			using var scope = new AssertionScope(Identifier);
-
 			var file = Subject.Items
 				.Should()
 				.ContainSingle(because, becauseArgs)

@@ -106,6 +106,19 @@ namespace Genzor
 				.WithContent(expectedContent);
 		}
 
+		[Fact(DisplayName = "given generator with multiple levels of generic component wrapping a file component, " +
+							"when invoking generator, " +
+							"then wrapped file component is added to file system")]
+		public async Task Test015()
+		{
+			await SUT.InvokeGeneratorAsync<StaticWithMultipleNestedComponentsWrappingFileGenerator>();
+
+			FileSystem
+				.Should()
+				.ContainSingleTextFile()
+				.WithName(StaticWithMultipleNestedComponentsWrappingFileGenerator.NestedFileName);
+		}
+
 		[Fact(DisplayName = "given generator that creates multiple file, " +
 							"when invoking generator, " +
 							"then generated files is added to file system in generated order")]
@@ -157,6 +170,35 @@ namespace Genzor
 				});
 		}
 
+		[Fact(DisplayName = "given directory generator that has file generator as its child, " +
+							"when invoking generator, " +
+							"then the generated file is added to the generated directory")]
+		public async Task Test033()
+		{
+			await SUT.InvokeGeneratorAsync<DirectoryWithFileGenerator>();
 
+			FileSystem
+				.Should()
+				.ContainSingleDirectory()
+				.Which
+				.Should()
+				.ContainSingleTextFile()
+				.WithName(DirectoryWithFileGenerator.ChildFileName);
+		}
+
+		//[Fact(DisplayName = "given directory generator which none file system component as child content, " +
+		//					"when invoking generator, " +
+		//					"then an InvalidGeneratorComponentContentException is thrown")]
+		//public async Task Test033()
+		//{
+		//	Func<Task> throwingAction = () => SUT.InvokeGeneratorAsync<DirectoryWithNoneFileSystemComponentGenerator>();
+
+		//	await throwingAction
+		//		.Should()
+		//		.ThrowAsync<InvalidGeneratorComponentContentException>()
+		//		.WithMessage($"A directory component ({nameof(IDirectoryComponent)}) can only have other directory components or file components ({nameof(IFileComponent)}) as its children. Type of misplaced component: {DirectoryWithNoneFileSystemComponentGenerator.ChildComponent.FullName}");
+		//}
+
+		// TODO: throw exception on invalid file or directory names (verify using Path.GetInvalidFileNameChars())
 	}
 }

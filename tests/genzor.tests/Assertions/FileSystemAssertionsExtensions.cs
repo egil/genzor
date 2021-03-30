@@ -25,7 +25,7 @@ namespace FluentAssertions
 
 		public DirectoryAssertions ContainSingleDirectory(string because = "", params object[] becauseArgs)
 		{
-			using var scope = new AssertionScope(Identifier);
+			using var scope = new AssertionScope("directory");
 
 			var directory = Subject.Root
 				.Should()
@@ -40,7 +40,7 @@ namespace FluentAssertions
 
 		public AndWhichConstraint<FileSystemAssertions, IEnumerable<IDirectory>> HaveDirectories(int count, string because = "", params object[] becauseArgs)
 		{
-			using var scope = new AssertionScope(Identifier);
+			using var scope = new AssertionScope("directories");
 
 			AndConstraint<Collections.GenericCollectionAssertions<IDirectory>> files = Subject.Root.OfType<IDirectory>()
 				.Should()
@@ -51,8 +51,6 @@ namespace FluentAssertions
 
 		public FileAssertions<string> ContainSingleTextFile(string because = "", params object[] becauseArgs)
 		{
-			using var scope = new AssertionScope(Identifier);
-
 			var file = Subject.Root
 				.Should()
 				.ContainSingle(because, becauseArgs)
@@ -66,7 +64,7 @@ namespace FluentAssertions
 
 		public AndWhichConstraint<FileSystemAssertions, IEnumerable<IFile<string>>> HaveTextFiles(int count, string because = "", params object[] becauseArgs)
 		{
-			using var scope = new AssertionScope(Identifier);
+			using var scope = new AssertionScope("text files");
 
 			AndConstraint<Collections.GenericCollectionAssertions<IFile<string>>> files = Subject.Root.OfType<IFile<string>>()
 				.Should()

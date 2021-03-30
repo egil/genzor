@@ -9,10 +9,10 @@ namespace Genzor.FileSystem.Internal
 
 		public IReadOnlyList<IFileSystemItem> Items { get; }
 
-		public Directory(string name)
+		public Directory(string name, IReadOnlyList<IFileSystemItem> items)
 		{
 			Name = name;
-			Items = Array.Empty<IFileSystemItem>();
+			Items = items;
 		}
 
 		public void AddItem(IFileSystemItem item) => throw new System.NotImplementedException();
