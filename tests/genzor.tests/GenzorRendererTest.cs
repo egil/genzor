@@ -40,13 +40,9 @@ namespace Genzor
 			FileSystem
 				.Should()
 				.ContainSingleTextFile()
-				.Subject
-				.Should()
-				.BeEquivalentTo(new
-				{
-					Name = StaticFileGenerator.NameText,
-					Content = StaticFileGenerator.ContentText,
-				});
+				.WithName(StaticFileGenerator.NameText)
+				.And
+				.WithContent(StaticFileGenerator.ContentText);
 		}
 
 		[AutoData]
@@ -63,13 +59,9 @@ namespace Genzor
 			FileSystem
 				.Should()
 				.ContainSingleTextFile()
-				.Subject
-				.Should()
-				.BeEquivalentTo(new
-				{
-					Name = filename,
-					Content = content,
-				});
+				.WithName(filename)
+				.And
+				.WithContent(content);
 		}
 
 		[Fact(DisplayName = "given file generator which has a directory as its content, " +
@@ -95,10 +87,7 @@ namespace Genzor
 			FileSystem
 				.Should()
 				.ContainSingleTextFile()
-				.Which
-				.Content
-				.Should()
-				.Be(StaticFileWithChildComponentGenerator.ChildComponentText);
+				.WithContent(StaticFileWithChildComponentGenerator.ChildComponentText);
 		}
 
 		[Fact(DisplayName = "given file generator with multiple nested child components as its content, " +
@@ -114,10 +103,7 @@ namespace Genzor
 			FileSystem
 				.Should()
 				.ContainSingleTextFile()
-				.Which
-				.Content
-				.Should()
-				.Be(expectedContent);
+				.WithContent(expectedContent);
 		}
 
 		[Fact(DisplayName = "given generator that creates multiple file, " +
@@ -149,12 +135,7 @@ namespace Genzor
 			FileSystem
 				.Should()
 				.ContainSingleDirectory()
-				.Which
-				.Should()
-				.BeEquivalentTo(new
-				{
-					Name = StaticDirectoryGenerator.NameText,
-				});
+				.WithName(StaticDirectoryGenerator.NameText);
 		}
 
 		[Fact(DisplayName = "given generator that creates multiple directories, " +

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
+using Genzor.Assertions;
 using Genzor.FileSystem;
 
 namespace FluentAssertions
@@ -22,7 +23,7 @@ namespace FluentAssertions
 		{
 		}
 
-		public AndWhichConstraint<FileSystemAssertions, IDirectory> ContainSingleDirectory(string because = "", params object[] becauseArgs)
+		public DirectoryAssertions ContainSingleDirectory(string because = "", params object[] becauseArgs)
 		{
 			using var scope = new AssertionScope(Identifier);
 
@@ -34,7 +35,7 @@ namespace FluentAssertions
 				.BeAssignableTo<IDirectory>(because, becauseArgs)
 				.Subject;
 
-			return new AndWhichConstraint<FileSystemAssertions, IDirectory>(this, directory);
+			return new DirectoryAssertions(directory);
 		}
 
 		public AndWhichConstraint<FileSystemAssertions, IEnumerable<IDirectory>> HaveDirectories(int count, string because = "", params object[] becauseArgs)
@@ -48,7 +49,7 @@ namespace FluentAssertions
 			return new AndWhichConstraint<FileSystemAssertions, IEnumerable<IDirectory>>(this, files.And.Subject);
 		}
 
-		public AndWhichConstraint<FileSystemAssertions, IFile<string>> ContainSingleTextFile(string because = "", params object[] becauseArgs)
+		public FileAssertions<string> ContainSingleTextFile(string because = "", params object[] becauseArgs)
 		{
 			using var scope = new AssertionScope(Identifier);
 
@@ -60,7 +61,7 @@ namespace FluentAssertions
 				.BeAssignableTo<IFile<string>>(because, becauseArgs)
 				.Subject;
 
-			return new AndWhichConstraint<FileSystemAssertions, IFile<string>>(this, file);
+			return new FileAssertions<string>(file);
 		}
 
 		public AndWhichConstraint<FileSystemAssertions, IEnumerable<IFile<string>>> HaveTextFiles(int count, string because = "", params object[] becauseArgs)

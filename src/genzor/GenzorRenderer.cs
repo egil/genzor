@@ -85,7 +85,7 @@ namespace Genzor
 
 		private void AddDirectoryToFileSystem(int componentId, IDirectoryComponent component)
 		{
-			var file = new FileSystem.Internal.Directory(component.Name);
+			var file = new Directory(component.Name);
 			fileSystem.AddItem(file);
 		}
 
