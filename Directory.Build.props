@@ -3,6 +3,7 @@
 
 	<PropertyGroup Label="Configuration variables">
 		<DotNet5Version>5.0.4</DotNet5Version>
+		<DotNet3Version>3.1.13</DotNet3Version>
 	</PropertyGroup>
 
 	<!-- Solution wide properties -->
@@ -45,4 +46,18 @@
 		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.20.0.28934" PrivateAssets="All" />
 	</ItemGroup>
 
+
+	<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<!-- By default, the nullable attributes from dotnet/coreclr are included as source code with 'internal'
+       accessibility. Uncomment to suppress this if the attributes are included from another source and/or
+       are not needed. -->
+
+		<GenerateNullableAttributes>true</GenerateNullableAttributes>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all" />
+		<PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[5.0.0]" />
+	</ItemGroup>
+	
 </Project>
