@@ -14,6 +14,8 @@ The files and directories are represented by two sets of types in Genzor, one in
 |      **File** |           `IFileComponent`           | `IFile<TContent>` |
 |               |                                      |                   |
 
+**NOTE:** Genzor comes with an implemetation of the `IDirectoryComponent` and `IFileComponent` types to make it easier to get started. These are simply named `Directory` and `TextFile`. But you are free to create your own as needed.
+
 Genzor will add files and directories to the file system abstraction you provide like this:
 
 1. Invoke (render) the generator component, pass in any regular `[Parameter]` parameters to it or `[Inject]` services into it.
