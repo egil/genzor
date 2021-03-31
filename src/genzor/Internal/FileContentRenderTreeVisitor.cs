@@ -6,7 +6,7 @@ using System.Diagnostics;
 using Genzor.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
 
-namespace Genzor
+namespace Genzor.Internal
 {
 	internal class FileContentRenderTreeVisitor
 	{
