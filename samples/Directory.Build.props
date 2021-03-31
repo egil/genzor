@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<!-- Empty to stop inheriting from project Directory.Build.props in parent directory -->
+	<PropertyGroup Label="Configuration variables">
+		<GenzorVersion>1.0.0-g58688fe16c</GenzorVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Compile settings">
+		<Nullable>enable</Nullable>
+		<LangVersion>9.0</LangVersion>
+		<NoWarn>CA1014</NoWarn>
+
+		<!-- Used by code coverage -->
+		<DebugType>full</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Analyzer settings">
+		<AnalysisMode>Default</AnalysisMode>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+	</PropertyGroup>
+	
 </Project>

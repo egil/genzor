@@ -11,14 +11,16 @@ namespace Genzor.CSharp.SourceGenerators
 	{
 		private readonly VirtualFileSystem fileSystem;
 		private readonly GenzorHost host;
+		private bool disposedValue;
 
 		[Parameter]
 		public abstract GeneratorExecutionContext Context { get; set; }
 
-		public GenzorSourceGeneratorBase()
+		protected GenzorSourceGeneratorBase()
 		{
 			fileSystem = new VirtualFileSystem();
-			host = new GenzorHost().AddFileSystem(fileSystem);
+			host = new GenzorHost();
+			host.AddFileSystem(fileSystem);
 		}
 
 		public void Execute(GeneratorExecutionContext context)
@@ -42,6 +44,24 @@ namespace Genzor.CSharp.SourceGenerators
 			// No initialization required
 		}
 
-		public void Dispose() => host.Dispose();
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposedValue)
+			{
+				if (disposing)
+				{
+					host.Dispose();
+				}
+
+				disposedValue = true;
+			}
+		}
+
+		public void Dispose()
+		{
+			// Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+			Dispose(disposing: true);
+			GC.SuppressFinalize(this);
+		}
 	}
 }

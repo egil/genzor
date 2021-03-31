@@ -3,7 +3,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
-namespace GenzorSourceGeneratorsDemo
+namespace GenzorSourceGeneratorsDemo.SourceGeneratorSamples
 {
 	[Generator]
 	public class HelloWorldGenerator : ISourceGenerator
