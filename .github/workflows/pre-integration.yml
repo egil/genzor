@@ -6,6 +6,8 @@ on:
       - opened
       - synchronize
       - reopened
+    paths:
+      - '!samples/**'
 
 jobs:
   dotnet5-build:

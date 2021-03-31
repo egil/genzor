@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - '!release'
+    paths:
+      - '!samples/**'
 
 env:
   NUGET_REPO_URL: 'https://nuget.pkg.github.com/egil/index.json'
