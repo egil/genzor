@@ -179,9 +179,9 @@ namespace Genzor
 				.WithName(DirectoryWithFileGenerator.ChildFileName);
 		}
 
-		[Fact(DisplayName = "given directory generator that multiple nested components that wraps other generator as its child, " +
-					"when invoking generator, " +
-					"then the generated file is added to the generated directory")]
+		[Fact(DisplayName = "given directory generator with multiple nested components that wraps another generator as its child, " +
+							"when invoking generator, " +
+							"then the generated file is added to the generated directory")]
 		public async Task Test034()
 		{
 			await Host.InvokeGeneratorAsync<StaticFileWithMultipleNestedComponentsWrappingItemsGenerator>();
