@@ -54,7 +54,9 @@ Mode                 LastWriteTime         Length Name
 
 ## Example
 
-The following example creates a console application that uses Genzor to run the `HelloWorldGenerator.razor` generator component.
+The following creates a console application that uses Genzor to run the `HelloWorldGenerator.razor` generator component.
+
+You can also download the sample from https://github.com/egil/genzor/tree/main/samples/GenzorDemo if you prefer.
 
 The steps are as follows:
 
@@ -81,7 +83,9 @@ The steps are as follows:
                 var fileSystem = new FileSystem(new DirectoryInfo(Directory.GetCurrentDirectory()));
 
                 using var host = new GenzorHost()
-                    .AddLogging(configure => configure.AddConsole().SetMinimumLevel(LogLevel.Debug)) // if the optional logging package has beed added
+                    .AddLogging(configure => configure
+						      .AddConsole()
+								.SetMinimumLevel(LogLevel.Debug)) // if the optional logging package has beed added
                     .AddFileSystem(fileSystem);
 
                 await host.InvokeGeneratorAsync<HelloWorldGenerator>();
