@@ -23,7 +23,7 @@ namespace Genzor
 			var context = new HtmlRenderingContext();
 			var newPosition = RenderFrames(context, frames, 0, frames.Count);
 			Debug.Assert(newPosition == frames.Count, "All render frames for component was not processes.");
-			return string.Join(null, context.Result);
+			return string.Join(separator: null, context.Result);
 		}
 
 		private int RenderFrames(HtmlRenderingContext context, ArrayRange<RenderTreeFrame> frames, int position, int maxElements)

@@ -9,10 +9,7 @@ using Genzor.Components;
 using Genzor.FileSystem;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using FSDirectory = Genzor.FileSystem.Internal.Directory;
-using FSTextFile = Genzor.FileSystem.Internal.TextFile;
 
 namespace Genzor
 {
@@ -25,6 +22,7 @@ namespace Genzor
 	public sealed class GenzorRenderer : Renderer, IRenderTree
 	{
 		private readonly IFileSystem fileSystem;
+		private readonly IFileSystemItemFactory itemFactory;
 		private readonly FileContentRenderTreeVisitor fileContentVisitor;
 		private readonly ILogger<GenzorRenderer> logger;
 
@@ -34,12 +32,15 @@ namespace Genzor
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GenzorRenderer"/> class.
 		/// </summary>
+		/// <param name="fileSystem">The file system to add generated files and directories to.</param>
+		/// <param name="itemFactory">The factory to use to create files and directories with.</param>
 		/// <param name="services">The <see cref="IServiceProvider "/> to be used when initializing components and get dependencies from.</param>
 		/// <param name="loggerFactory">The <see cref="ILoggerFactory"/>.</param>
-		public GenzorRenderer(IServiceProvider services, ILoggerFactory loggerFactory)
+		public GenzorRenderer(IFileSystem fileSystem, IFileSystemItemFactory itemFactory, IServiceProvider services, ILoggerFactory loggerFactory)
 			: base(services, loggerFactory)
 		{
-			fileSystem = services.GetRequiredService<IFileSystem>();
+			this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+			this.itemFactory = itemFactory ?? throw new ArgumentNullException(nameof(itemFactory));
 			fileContentVisitor = new FileContentRenderTreeVisitor(this);
 			logger = loggerFactory.CreateLogger<GenzorRenderer>();
 		}
@@ -66,9 +67,17 @@ namespace Genzor
 		/// <param name="componentType">The type of generator component to invoke.</param>
 		/// <param name="initialParameters">Optional parameters to pass to the generator.</param>
 		/// <returns>A <see cref="Task"/> that completes when the generator finishes.</returns>
+		[SuppressMessage("Major Code Smell", "S4457:Parameter validation in \"async\"/\"await\" methods should be wrapped", Justification = "Kept like this since completed logging step would otherwise be put in a ContinueWith.")]
 		public async Task InvokeGeneratorAsync(Type componentType, ParameterView initialParameters)
 		{
-			var (id, component) = await Dispatcher.InvokeAsync(() => CreateInitialRenderAsync(componentType, initialParameters));
+			if (componentType is null)
+				throw new ArgumentNullException(nameof(componentType));
+
+			logger.LogInformation(new EventId(1), "Staring invocation of generator: {type}", componentType.FullName);
+
+			var (id, component) = await Dispatcher.InvokeAsync(
+				() => CreateInitialRenderAsync(componentType, initialParameters))
+					.ConfigureAwait(false);
 
 			// If the rendered component is either a IFileComponent or a
 			// IDirectoryComponent, this will get it and any of its children
@@ -87,12 +96,16 @@ namespace Genzor
 					fileSystem.AddItem(item);
 				}
 			}
+
+			logger.LogInformation(new EventId(2), "Completed invocation of generator: {type}", componentType.FullName);
 		}
 
 		private IDirectory GetDirectoryWithItems(int componentId, IDirectoryComponent component)
 		{
+			logger.LogInformation(new EventId(3), "Generated directory: {name}", component.Name);
+
 			var items = GetFileSystemItems(componentId);
-			return new FSDirectory(component.Name, items);
+			return itemFactory.CreateDirectory(component.Name, items);
 		}
 
 		private List<IFileSystemItem> GetFileSystemItems(int parentComponentId)
@@ -122,8 +135,10 @@ namespace Genzor
 
 		private IFileSystemItem GetFile(int componentId, IFileComponent component)
 		{
+			logger.LogInformation(new EventId(4), "Generated file: {name}", component.Name);
+
 			var content = fileContentVisitor.GetTextContent(componentId);
-			var file = new FSTextFile(component.Name, content);
+			var file = itemFactory.CreateFile<string>(component.Name, content);
 			return file;
 		}
 
@@ -140,7 +155,12 @@ namespace Genzor
 		}
 
 		/// <inheritdoc/>
-		protected override void HandleException(Exception exception) => ExceptionDispatchInfo.Capture(exception).Throw();
+		protected override void HandleException(Exception exception)
+		{
+			logger.LogWarning(new EventId(5), "Generator throw an exception: {exception}", exception);
+
+			ExceptionDispatchInfo.Capture(exception).Throw();
+		}
 
 		/// <inheritdoc/>
 		protected override Task UpdateDisplayAsync(in RenderBatch renderBatch) => Task.CompletedTask;
@@ -149,7 +169,10 @@ namespace Genzor
 		{
 			var component = InstantiateComponent(componentType);
 			var componentId = AssignRootComponentId(component);
-			await RenderRootComponentAsync(componentId, initialParameters);
+
+			await RenderRootComponentAsync(componentId, initialParameters)
+				.ConfigureAwait(false);
+
 			return (componentId, component);
 		}
 

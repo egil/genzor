@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Genzor.Components;
 using Genzor.FileSystem;
+using Genzor.FileSystem.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -28,12 +29,20 @@ namespace Genzor
 			{
 				if (renderer is null)
 				{
-					serviceProvider = collection.BuildServiceProvider();
-					renderer = new GenzorRenderer(serviceProvider, serviceProvider.GetService<ILoggerFactory>() ?? NullLoggerFactory.Instance);
+					renderer = CreateRenderer();
 				}
 
 				return renderer;
 			}
+		}
+
+		private GenzorRenderer CreateRenderer()
+		{
+			serviceProvider = collection.BuildServiceProvider();
+			var fileSystem = serviceProvider.GetRequiredService<IFileSystem>();
+			var itemFactory = serviceProvider.GetService<IFileSystemItemFactory>() ?? new DefaultFileSystemItemFactory();
+			var loggerFactory = serviceProvider.GetService<ILoggerFactory>() ?? NullLoggerFactory.Instance;
+			return new GenzorRenderer(fileSystem, itemFactory, serviceProvider, loggerFactory);
 		}
 
 		/// <summary>
@@ -134,7 +143,8 @@ namespace Genzor
 		/// <typeparam name="TComponent">The generator component to invoke.</typeparam>
 		/// <param name="initialParameters">Optional parameters to pass to the generator.</param>
 		/// <returns>A <see cref="Task"/> that completes when the generator finishes.</returns>
-		public Task InvokeGeneratorAsync<TComponent>(ParameterView? initialParameters) where TComponent : IComponent
+		public Task InvokeGeneratorAsync<TComponent>(ParameterView? initialParameters)
+			where TComponent : IComponent
 			=> Renderer.InvokeGeneratorAsync<TComponent>(initialParameters);
 
 		/// <summary>
