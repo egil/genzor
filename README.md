@@ -3,29 +3,7 @@ Genzor is an experimental library ideally suited for generating files spanning m
 
 That means all the Blazor goodness such as cascading values, service injection, etc., should work, making it easy to split up complex (code) generation into different Blazor components that each produce a small bit of the total generated output.
 
-## How it works
-The basic version of Genzor allows you to create components that produce files and directories into a file system abstraction that you provide to Genzor.
-
-The files and directories are represented by two sets of types in Genzor, one in your generator component's render tree and one your file system:
-
-|          Type | Generator component's<br>render tree |    File system    |
-|--------------:|:------------------------------------:|:-----------------:|
-| **Directory** |         `IDirectoryComponent`        |    `IDirectory`   |
-|      **File** |           `IFileComponent`           | `IFile<TContent>` |
-|               |                                      |                   |
-
-**NOTE:** Genzor comes with an implemetation of the `IDirectoryComponent` and `IFileComponent` types to make it easier to get started. These are simply named `Directory` and `TextFile`. But you are free to create your own as needed.
-
-Genzor will add files and directories to the file system abstraction you provide like this:
-
-1. Invoke (render) the generator component, pass in any regular `[Parameter]` parameters to it or `[Inject]` services into it.
-2. Walk through the entire render tree, and create `IDirectory` and `IFile<string>` whenever a `IDirectoryComponent` or `IFileComponent` is encountered.  
-   - Top level `IDirectoryComponent` or `IFileComponent` components, i.e. ones not nested inside a parent `IDirectoryComponent` component, are added directly to the file system through its `AddItem()` method.
-   - `IDirectoryComponent` or `IFileComponent` components nested inside a parent `IDirectoryComponent` component is instead added to the related `IDirectory` through it's `Add()` method.
-3. A `IDirectoryComponent` component can contain other content and components, but only `IDirectoryComponent` or `IFileComponent` child components will be added passed to the `IDirectory` it maps to.
-4. A `IFileComponent` component can contain other content and components, whose rendered output will be added to as the content of the `IFile<string>` that it maps to. The only exception is that a `IFileComponent` component cannot contain a `IDirectoryComponent` component inside it.
-
-For example, consider the simple `HelloWorldGenerator.razor` generator component:
+For example, consider this simple `HelloWorldGenerator.razor` generator component:
 
 ```razor
 <Directory Name="HelloWorld">
@@ -53,6 +31,28 @@ Mode                 LastWriteTime         Length Name
 ----                 -------------         ------ ----
 -a---          30-03-2021    23:36             17 nested-hello-text.txt
 ```
+
+## How it works
+The basic version of Genzor allows you to create components that produce files and directories into a file system abstraction that you provide to Genzor.
+
+The files and directories are represented by two sets of types in Genzor, one in your generator component's render tree and one your file system:
+
+|          Type | Generator component's<br>render tree |    File system    |
+|--------------:|:------------------------------------:|:-----------------:|
+| **Directory** |         `IDirectoryComponent`        |    `IDirectory`   |
+|      **File** |           `IFileComponent`           | `IFile<TContent>` |
+|               |                                      |                   |
+
+**NOTE:** Genzor comes with an implemetation of the `IDirectoryComponent` and `IFileComponent` types to make it easier to get started. These are simply named `Directory` and `TextFile`. But you are free to create your own as needed.
+
+Genzor will add files and directories to the file system abstraction you provide like this:
+
+1. Invoke (render) the generator component, pass in any regular `[Parameter]` parameters to it or `[Inject]` services into it.
+2. Walk through the entire render tree, and create `IDirectory` and `IFile<string>` whenever a `IDirectoryComponent` or `IFileComponent` is encountered.  
+   - Top level `IDirectoryComponent` or `IFileComponent` components, i.e. ones not nested inside a parent `IDirectoryComponent` component, are added directly to the file system through its `AddItem()` method.
+   - `IDirectoryComponent` or `IFileComponent` components nested inside a parent `IDirectoryComponent` component is instead added to the related `IDirectory` through it's `Add()` method.
+3. A `IDirectoryComponent` component can contain other content and components, but only `IDirectoryComponent` or `IFileComponent` child components will be added passed to the `IDirectory` it maps to.
+4. A `IFileComponent` component can contain other content and components, whose rendered output will be added to as the content of the `IFile<string>` that it maps to. The only exception is that a `IFileComponent` component cannot contain a `IDirectoryComponent` component inside it.
 
 ## Example
 
@@ -86,8 +86,8 @@ The following creates a console application that uses Genzor to run the `HelloWo
 
                 using var host = new GenzorHost()
                     .AddLogging(configure => configure
-						      .AddConsole()
-								.SetMinimumLevel(LogLevel.Debug)) // if the optional logging package has beed added
+					.AddConsole()
+					.SetMinimumLevel(LogLevel.Debug)) // if the optional logging package has beed added
                     .AddFileSystem(fileSystem);
 
                 await host.InvokeGeneratorAsync<HelloWorldGenerator>();
