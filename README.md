@@ -56,9 +56,9 @@ Mode                 LastWriteTime         Length Name
 
 The following creates a console application that uses Genzor to run the `HelloWorldGenerator.razor` generator component.
 
-You can also download the sample from https://github.com/egil/genzor/tree/main/samples/GenzorDemo if you prefer.
+**NOTE:** You can also download the sample from https://github.com/egil/genzor/tree/main/samples/GenzorDemo if you prefer.
 
-The steps are as follows:
+**The steps are as follows:**
 
 1. Create new console app, e.g. using `dotnet new console -o GenzorDemo`.
 2. Change the project SDK type to `Microsoft.NET.Sdk.Razor`.
