@@ -1,0 +1,28 @@
+@attribute [Generator]
+@inherits GenzorSourceGeneratorBase
+
+<TextFile Name="helloWorldGenerated.cs">
+using System;
+namespace HelloWorldGenerated
+{
+    public static class HelloWorldRazor
+    {
+        public static void SayHello() 
+        {
+            Console.WriteLine("Hello from razor generated code!");
+            Console.WriteLine("The following syntax trees existed in the compilation that created this program:");
+            
+			@foreach (SyntaxTree tree in Context.Compilation.SyntaxTrees)
+			{
+                <text>
+                    Console.WriteLine(@@" - @tree.FilePath");
+                </text>
+			}
+        }
+    }
+}
+</TextFile>
+
+@code {
+    [Parameter] public override GeneratorExecutionContext Context { get; set; }
+}
