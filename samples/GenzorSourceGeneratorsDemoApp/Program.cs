@@ -7,7 +7,7 @@ namespace GenzorSourceGeneratorsDemoApp
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-			HelloWorldGenerated.HelloWorldRazor.SayHello();
+			GenzorHelloWorldGenerated.HelloWorld.SayHello();
 		}
     }
 }

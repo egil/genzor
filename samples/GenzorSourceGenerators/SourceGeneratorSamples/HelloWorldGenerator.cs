@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
-namespace GenzorSourceGeneratorsDemo.SourceGeneratorSamples
+namespace SourceGeneratorSamples
 {
 	[Generator]
 	public class HelloWorldGenerator : ISourceGenerator

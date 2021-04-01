@@ -1,8 +1,8 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading.Tasks;
 using Genzor;
+using GenzorStandAloneConsoleApp.Generators;
 using Microsoft.Extensions.Logging;
-using GenzorDemo.Generators;
 
 namespace GenzorDemo
 {
