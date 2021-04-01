@@ -49,7 +49,7 @@ jobs:
         run: dotnet test -c Debug --no-build /p:UseSourceLink=true /p:CollectCoverage=true /p:CoverletOutput=./coverage/ /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute=\"Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute\"
         
       - name: 🧪 Collect code coverage
-      - uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v1
         with:          
           flags: unittests
           name: genzor # optional
