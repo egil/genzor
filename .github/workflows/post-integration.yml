@@ -45,69 +45,22 @@ jobs:
       - name: 🔁 Restore packages
         run: dotnet restore
 
+      - name: 🧪 Run unit tests
+        run: dotnet test -c Debug --no-build /p:UseSourceLink=true /p:CollectCoverage=true /p:CoverletOutput=./coverage/ /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute=\"Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute\"
+        
+      - name: 🧪 Collect code coverage
+      - uses: codecov/codecov-action@v1
+        with:          
+          flags: unittests
+          name: genzor # optional
+          fail_ci_if_error: false # optional (default = false)
+          verbose: true # optional (default = false)           
+      
       - name: 🛠️ Build
         run: dotnet build -c Release --no-restore -p:RepositoryBranch=$BRANCH_NAME -p:ContinousIntegrationBuild=true -p:PublicRelease=false -p:UseSourceLink=true
-
-      - name: 🧪 Run unit tests
-        run: dotnet test -c Release --no-build
       
       - name: 🗳️ Creating library package for pre-release
         run: dotnet pack -c Release --no-restore -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=$BRANCH_NAME -p:ContinousIntegrationBuild=true -p:PublicRelease=false -p:UseSourceLink=true
 
       - name: 📦 Push packages to GitHub Package Registry
         run: dotnet nuget push ${GITHUB_WORKSPACE}/packages/*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate
-  sonar-cloud:
-    name: sonarcloud-scan
-    runs-on: windows-latest
-    steps:
-      - name: 🛒 Checkout repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: ⚛️ Sets environment variables - branch-name
-        uses: nelonoel/branch-name@v1.0.1
-
-      - name: ⚛️ Sets environment variables - Nerdbank.GitVersioning
-        uses: dotnet/nbgv@master
-        with:
-          setAllVars: true
-
-      - name: ⚙️ Setup dotnet 3.1.x
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '3.1.x'
-
-      - name: ⚙️ Setup dotnet 5.0.x
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '5.0.x'
-          
-      - name: ⚙️ Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.11
-
-      - name: 🧹 Clean
-        run: dotnet clean -c Release && dotnet nuget locals all --clear
-
-      - name: 🔁 Restore packages
-        run: dotnet restore    
-
-      - uses: dotnet/nbgv@master
-        with:
-          setAllVars: true
-
-      - name: 🌩️ SonarCloud install scanner
-        run: dotnet tool install --global dotnet-sonarscanner
-      
-      - name: 🌩️ SonarCloud analyze
-        shell: bash
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          dotnet sonarscanner begin /k:"egil_genzor" /o:"egil" /n:"genzor" /v:"$NBGV_NuGetPackageVersion" /d:sonar.login="$SONAR_TOKEN" /d:sonar.host.url=https://sonarcloud.io /d:sonar.branch.name="$BRANCH_NAME" /d:sonar.verbose="true" /d:sonar.cs.opencover.reportsPaths="tests/**/coverage/*.opencover.xml"
-          dotnet build genzor.sln
-          dotnet test genzor.sln /p:CollectCoverage=true /p:CoverletOutput=./coverage/ /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute=\"Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute\"
-          dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
