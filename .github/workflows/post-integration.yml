@@ -20,7 +20,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: ⚛️ Sets environment variables - branch-name
         uses: nelonoel/branch-name@v1.0.1
@@ -61,39 +60,54 @@ jobs:
     name: sonarcloud-scan
     runs-on: windows-latest
     steps:
-      - name: Set up JDK 11
+      - name: 🛒 Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: ⚛️ Sets environment variables - branch-name
+        uses: nelonoel/branch-name@v1.0.1
+
+      - name: ⚛️ Sets environment variables - Nerdbank.GitVersioning
+        uses: dotnet/nbgv@master
+        with:
+          setAllVars: true
+
+      - name: ⚙️ Setup dotnet 3.1.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
+
+      - name: ⚙️ Setup dotnet 5.0.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+          
+      - name: ⚙️ Set up JDK 11
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
-      - uses: actions/checkout@v2
+
+      - name: 🧹 Clean
+        run: dotnet clean -c Release && dotnet nuget locals all --clear
+
+      - name: 🔁 Restore packages
+        run: dotnet restore    
+
+      - uses: dotnet/nbgv@master
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v1
-        with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache SonarCloud scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v1
-        with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
-      - name: Install SonarCloud scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
-        run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      - name: Build and analyze
+          setAllVars: true
+
+      - name: 🌩️ SonarCloud install scanner
+        run: dotnet tool install --global dotnet-sonarscanner
+      
+      - name: 🌩️ SonarCloud analyze
+        shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"egil_genzor" /o:"egil" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet sonarscanner begin /k:"egil_genzor" /o:"egil" /n:"genzor" /v:"$NBGV_NuGetPackageVersion" /d:sonar.login="$SONAR_TOKEN" /d:sonar.host.url=https://sonarcloud.io /d:sonar.branch.name="$BRANCH" /d:sonar.verbose="true" /d:sonar.cs.opencover.reportsPaths="tests/**/coverage/*.opencover.xml"
           dotnet build genzor.sln
           dotnet test genzor.sln /p:CollectCoverage=true /p:CoverletOutput=./coverage/ /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute=\"Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute\"
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"        
+          dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"   
