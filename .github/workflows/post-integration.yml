@@ -20,7 +20,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: ⚛️ Sets environment variables - branch-name
         uses: nelonoel/branch-name@v1.0.1
@@ -46,11 +45,19 @@ jobs:
       - name: 🔁 Restore packages
         run: dotnet restore
 
+      - name: 🧪 Run unit tests
+        run: dotnet test -c Debug /p:ContinuousIntegrationBuild=false /p:CollectCoverage=true /p:CoverletOutput=./coverage/ /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute=\"Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute\"
+        
+      - name: 🧪 Collect code coverage
+        uses: codecov/codecov-action@v1
+        with:          
+          flags: unittests
+          name: genzor # optional
+          fail_ci_if_error: false # optional (default = false)
+          verbose: true # optional (default = false)           
+      
       - name: 🛠️ Build
         run: dotnet build -c Release --no-restore -p:RepositoryBranch=$BRANCH_NAME -p:ContinousIntegrationBuild=true -p:PublicRelease=false -p:UseSourceLink=true
-
-      - name: 🧪 Run unit tests
-        run: dotnet test -c Release --no-build
       
       - name: 🗳️ Creating library package for pre-release
         run: dotnet pack -c Release --no-restore -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=$BRANCH_NAME -p:ContinousIntegrationBuild=true -p:PublicRelease=false -p:UseSourceLink=true
