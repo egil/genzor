@@ -58,7 +58,7 @@ jobs:
       - name: 📦 Push packages to GitHub Package Registry
         run: dotnet nuget push ${GITHUB_WORKSPACE}/packages/*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate
   sonar-cloud:
-    name: SonarCloud Scan
+    name: sonarcloud-scan
     runs-on: windows-latest
     steps:
       - name: Set up JDK 11
