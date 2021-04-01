@@ -60,6 +60,3 @@ jobs:
 
       - name: 🛠️ Build
         run: dotnet build -c Debug --no-restore /p:UseSourceLink=true
-
-      - name: 🧪 Run unit tests
-        run: dotnet test -c Debug --no-build /p:UseSourceLink=true /p:CollectCoverage=true /p:CoverletOutput=./coverage/ /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute=\"Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute\"
