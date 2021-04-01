@@ -59,10 +59,10 @@ jobs:
         run: dotnet restore
 
       - name: 🛠️ Build
-        run: dotnet build -c Debug --no-restore /p:UseSourceLink=true
+        run: dotnet build -c Debug --no-restore /p:ContinuousIntegrationBuild=false
 
       - name: 🧪 Run unit tests
-        run: dotnet test -c Debug --no-build /p:UseSourceLink=true /p:CollectCoverage=true /p:CoverletOutput=./coverage/ /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute=\"Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute\"
+        run: dotnet test -c Debug --no-build /p:CollectCoverage=true /p:CoverletOutput=./coverage/ /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute=\"Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute\"
         
       - name: 🧪 Collect code coverage
         uses: codecov/codecov-action@v1
