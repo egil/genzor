@@ -1,17 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
-		<LangVersion>9.0</LangVersion>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<RazorLangVersion>3.0</RazorLangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.0.0" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" GeneratePathProperty="true" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" GeneratePathProperty="true" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" GeneratePathProperty="true" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" GeneratePathProperty="true" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.4" GeneratePathProperty="true" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.AspNetCore.Components" Version="$(DotNet3Version)" GeneratePathProperty="true" PrivateAssets="all" />
 		<PackageReference Include="genzor" Version="$(GenzorVersion)" GeneratePathProperty="true" PrivateAssets="all" />
 	</ItemGroup>
 
@@ -21,7 +21,7 @@
 	
 	<Target Name="GetDependencyTargetPaths">
 		<ItemGroup>
-			<TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_AspNetCore_Components)\lib\net5.0\Microsoft.AspNetCore.Components.dll" IncludeRuntimeDependency="false" />
+			<TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_AspNetCore_Components)\lib\netstandard2.0\Microsoft.AspNetCore.Components.dll" IncludeRuntimeDependency="false" />
 			<TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_Extensions_DependencyInjection)\lib\net5.0\Microsoft.Extensions.DependencyInjection.dll" IncludeRuntimeDependency="false" />
 			<TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_Extensions_DependencyInjection_Abstractions)\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll" IncludeRuntimeDependency="false" />
 			<TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_Extensions_Logging_Abstractions)\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll" IncludeRuntimeDependency="false" />
