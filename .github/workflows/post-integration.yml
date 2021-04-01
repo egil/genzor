@@ -107,8 +107,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          /key:[SonarQube/SonarCloud project key]
           dotnet sonarscanner begin /k:"egil_genzor" /o:"egil" /n:"genzor" /v:"$NBGV_NuGetPackageVersion" /key:"$SONAR_TOKEN" /d:sonar.host.url=https://sonarcloud.io /d:sonar.branch.name="$BRANCH" /d:sonar.verbose="true" /d:sonar.cs.opencover.reportsPaths="tests/**/coverage/*.opencover.xml"
           dotnet build genzor.sln
           dotnet test genzor.sln /p:CollectCoverage=true /p:CoverletOutput=./coverage/ /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute=\"Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute\"
-          dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"   
+          dotnet sonarscanner end /key:"$SONAR_TOKEN"
