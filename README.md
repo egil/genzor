@@ -3,7 +3,7 @@ Genzor is an experimental library ideally suited for generating files spanning m
 
 That means all the Blazor goodness such as cascading values, service injection, etc., should work, making it easy to split up complex (code) generation into different Blazor components that each produce a small bit of the total generated output.
 
-For example, consider this simple `HelloWorldGenerator.razor` generator component from the sample [GenzorDemo console app](https://github.com/egil/genzor/tree/main/samples/GenzorDemo):
+For example, consider this simple `HelloWorldGenerator.razor` generator component from the sample [Genzor Stand Alone Console App](https://github.com/egil/genzor/tree/main/samples/GenzorStandAloneConsoleApp):
 
 ```razor
 <Directory Name="HelloWorld">
@@ -58,7 +58,7 @@ Genzor will add files and directories to the file system abstraction you provide
 
 The following creates a console application that uses Genzor to run the `HelloWorldGenerator.razor` generator component.
 
-**NOTE:** You can also download the sample from https://github.com/egil/genzor/tree/main/samples/GenzorDemo if you prefer.
+**NOTE:** You can also download the sample from https://github.com/egil/genzor/tree/main/samples/GenzorStandAloneConsoleApp if you prefer.
 
 **The steps are as follows:**
 
