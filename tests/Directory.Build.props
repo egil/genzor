@@ -12,7 +12,9 @@
 		<SonarQubeTestProject>true</SonarQubeTestProject>
 	</PropertyGroup>
 
-	<ItemGroup Condition="$(MSBuildProjectName) != 'bunit.testassets'">
+	<ItemGroup>
+		<PackageReference Include="MartinCostello.Logging.XUnit" Version="0.1.1" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(DotNet5Version)" />
 		<PackageReference Include="AutoFixture" Version="4.15.0" />
 		<PackageReference Include="AutoFixture.Xunit2" Version="4.15.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />

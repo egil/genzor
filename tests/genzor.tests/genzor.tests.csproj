@@ -8,11 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MartinCostello.Logging.XUnit" Version="0.1.1" />		
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\..\src\genzor\genzor.csproj" />
 	</ItemGroup>
 
