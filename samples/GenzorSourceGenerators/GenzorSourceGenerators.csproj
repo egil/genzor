@@ -11,7 +11,7 @@
 		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
 	</ItemGroup>
 	
-	<ItemGroup>
+	<ItemGroup Label="Genzor generator dependencies">
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(DotNet3Version)" GeneratePathProperty="true" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(DotNet3Version)" GeneratePathProperty="true" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(DotNet3Version)" GeneratePathProperty="true" PrivateAssets="all" />

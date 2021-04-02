@@ -2,8 +2,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup Label="Configuration variables">
 		<GenzorVersion>1.0.0-alpha-*</GenzorVersion>
-		<DotNet5Version>5.0.4</DotNet5Version>
-		<DotNet3Version>3.1.13</DotNet3Version>
+		<DotNet5Version>5.0.0</DotNet5Version>
+		<DotNet3Version>3.1.0</DotNet3Version>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Compile settings">

@@ -7,8 +7,8 @@
 
   <ItemGroup>
     <PackageReference Include="genzor" Version="$(GenzorVersion)" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(DotNet5Version)" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="$(DotNet5Version)" />
   </ItemGroup>
 
 </Project>
