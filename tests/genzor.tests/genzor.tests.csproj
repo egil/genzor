@@ -11,4 +11,10 @@
 		<ProjectReference Include="..\..\src\genzor\genzor.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Serilog" Version="2.9.0" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
+		<PackageReference Include="Serilog.Sinks.XUnit" Version="2.0.4" />
+	</ItemGroup>
+	
 </Project>

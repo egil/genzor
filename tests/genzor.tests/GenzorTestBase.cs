@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
+using Genzor.Assertions;
 using Genzor.TestDoubles;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
 namespace Genzor
@@ -20,7 +18,7 @@ namespace Genzor
 			FileSystem = new FakeFileSystem();
 			Host = new GenzorHost();
 			Host.AddFileSystem(FileSystem);
-			Host.AddLogging((builder) => builder.AddXUnit(outputHelper).SetMinimumLevel(LogLevel.Debug));
+			Host.AddLogging((builder) => builder.AddXunitLogger(outputHelper));
 		}
 
 		protected virtual void Dispose(bool disposing)
