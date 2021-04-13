@@ -1,0 +1,8 @@
+@inherits GenzorComponentBase
+@implements IDirectoryComponent
+@code
+{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Name { get; set; } = string.Empty;
+}
+<CascadingValue IsFixed=true Value=this>@ChildContent</CascadingValue>

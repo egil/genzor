@@ -1,0 +1,48 @@
+@inherits GenzorComponentBase
+@implements IUsedTypesCollection
+@code
+{
+    [CascadingParameter] public IGeneratedTypeCollection GeneratedTypes { get; set; }
+    [CascadingParameter] public Namespace Namespace { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Name { get; set; } = string.Empty;
+
+    private HashSet<TypeInfo> usedTypes = new();
+
+    void IUsedTypesCollection.Add(TypeInfo type)
+    {
+        usedTypes.Add(type);
+    }
+
+    protected override void OnInitialized()
+    {
+        GeneratedTypes.Add(new TypeInfo(Namespace.Name, Name, true));
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && usedTypes.Count > 0)
+        {
+            StateHasChanged();
+        }
+    }
+}
+<TextFile Name=@Name>
+#nullable enable
+namespace @Namespace.Name
+{
+@foreach (var u in usedTypes.OrderBy(x => x.Namespace))
+{
+    <text>
+    using @u.Namespace;
+    </text>
+}
+
+    public class @Name
+    {
+    <CascadingValue IsFixed=true Value=this>
+        @ChildContent
+    </CascadingValue>
+    }
+}
+</TextFile>

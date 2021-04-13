@@ -1,0 +1,8 @@
+@attribute [Generator]
+@inherits GenzorSourceGeneratorBase
+<Project>
+@foreach (var option in Options)
+{
+    <CSVClassFileGenerator Option=@option></CSVClassFileGenerator>
+}
+</Project>

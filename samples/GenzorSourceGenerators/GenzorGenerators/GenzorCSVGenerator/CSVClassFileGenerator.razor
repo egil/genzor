@@ -1,0 +1,49 @@
+<Namespace Name="CSVGenzor">
+    <Class Name=@Option.ClassName>
+
+        static <UseType Type="IEnumerable<GenType>" GenType=@Option.ClassName /> _all = null;
+
+        <Constructor IsStatic="true" Visible="Option.LoadType == CsvLoadType.Startup">
+            _ = All;
+        </Constructor>                   
+        
+        @foreach(var prop in Properties)
+        {
+            <Property ClrType=@prop.TypeName Name=@prop.Name />
+        }
+
+        public static <UseType Type="IEnumerable<GenType>" GenType=@Option.ClassName /> All
+        {
+            get
+            {
+                if(_all is not null)
+                {
+                    return _all;
+                }
+
+                List@($"<{Option.ClassName}>") items = new();
+                @Option.ClassName i;
+                @foreach(var row in Rows)
+                {
+                    <text>
+                        i = new();
+                    </text>
+
+                    @foreach(var prop in Properties)
+                    {
+                        <text>
+                            i.@prop.Name = @GetCsvValue(@prop.TypeName, @row[@prop.ColumnIndex]);
+                        </text>
+                    }
+
+                    <text>
+                        items.Add(i);
+                    </text>
+                }
+
+                _all = items;
+                return _all;
+            }
+        }        
+    </Class>
+</Namespace>

@@ -1,0 +1,30 @@
+@inherits GenzorComponentBase
+@code
+{
+    [CascadingParameter] public Class Class { get; set; } = default!;
+    [Parameter] public bool IsStatic { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string Modifiers
+    {
+        get
+        {
+            var result = IsStatic
+                ? "static"
+                : "public";
+
+            return result;
+        }
+    }
+
+    private const string Arguments = "()";
+}
+@if (Visible)
+{
+    <text>
+    @Modifiers @Class.Name@Arguments
+    {
+        @ChildContent
+    }
+    </text>
+}

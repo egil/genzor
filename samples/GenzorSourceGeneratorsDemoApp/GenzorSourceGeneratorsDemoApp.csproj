@@ -8,5 +8,12 @@
 	<ItemGroup>
 		<ProjectReference Include="..\GenzorSourceGenerators\GenzorSourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
-	
+
+	<ItemGroup>
+		<AdditionalFiles Include="Csv\People.csv" CsvLoadType="Startup" />
+		<AdditionalFiles Include="Csv\Cars.csv" CsvLoadType="OnDemand" CacheObjects="true" />
+	</ItemGroup>
+
+	<!-- Manually reference the generator props because we locally reference the generator. When added via NuGet this happens automatically -->
+	<Import Project="..\GenzorSourceGenerators\SourceGeneratorSamples\CsvGenerator.props" />
 </Project>
